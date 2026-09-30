@@ -6,34 +6,854 @@ import { useRouter } from "next/navigation";
 import type { PlanwardDocument } from "@/core/format";
 import { addCalendarDays, isoMonday } from "@/core/calendar";
 import { occupancy, projectLoads, weeklyCapacity } from "@/core/capacity";
+import { exportSpreadsheet, exportTimelinePdf } from "@/export/client";
 
 type Props = { project: PlanwardDocument | null; canEdit: boolean };
 type View = "list" | "timeline" | "capacity";
-const labels: Record<string, string> = { recorded: "Planifiée", qualified: "Qualifiée", inprogress: "En cours", done: "Terminée", cancelled: "Annulée" };
+const labels: Record<string, string> = {
+  recorded: "Planifiée",
+  qualified: "Qualifiée",
+  inprogress: "En cours",
+  done: "Terminée",
+  cancelled: "Annulée",
+};
 const decimal = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1 });
 
 function Avatar({ resource }: { resource: PlanwardDocument["resources"][string] }) {
-  return <span className="av sm" style={{ "--rc": resource.color } as React.CSSProperties}>{resource.initials}</span>;
+  return (
+    <span className="av sm" style={{ "--rc": resource.color } as React.CSSProperties}>
+      {resource.initials}
+    </span>
+  );
 }
 
 export function PlanwardApp({ project, canEdit }: Props) {
-  const router = useRouter(); const importInput = useRef<HTMLInputElement>(null); const [view, setView] = useState<View>("list"); const [query, setQuery] = useState(""); const [filter, setFilter] = useState(""); const [collapsed, setCollapsed] = useState<Record<string, boolean>>({}); const [selected, setSelected] = useState<string | null>(null); const [login, setLogin] = useState(false); const [importError, setImportError] = useState("");
-  const resources = useMemo(() => Object.values(project?.resources ?? {}).sort((a, b) => a.order - b.order), [project]);
-  if (!project) return <main className="empty"><h1>Aucune donnée</h1><p>Importe une sauvegarde .json pour démarrer.</p></main>;
-  const activities = Object.values(project.activities); const milestones = Object.values(project.milestones); const calendar = { weekDays: project.meta.project.weekDays, holidays: project.holidays }; const loads = projectLoads(project, calendar); const total = activities.reduce((value, activity) => value + activity.estimate, 0); const actual = activities.reduce((value, activity) => value + Object.values(activity.assign).reduce((sum, assignment) => sum + assignment.actual, 0), 0); const remaining = activities.reduce((value, activity) => value + Object.values(activity.assign).reduce((sum, assignment) => sum + assignment.remaining, 0), 0); const weeks = timelineWeeks(project); const overloads = resources.reduce((count, resource) => count + weeks.filter((week) => (loads[resource.id]?.[week] ?? 0) > weeklyCapacity(resource, week, calendar) + .05).length, 0); const violated = Object.values(project.deps).filter((dependency) => nodeEnd(project, dependency.from) > nodeStart(project, dependency.to)).length;
-  const matches = (activity: PlanwardDocument["activities"][string]) => (!query || `${activity.name} ${activity.code} ${activity.wbs}`.toLowerCase().includes(query.toLowerCase())) && (!filter || activity.owner === filter || filter in activity.assign);
-  const onImport = async (event: ChangeEvent<HTMLInputElement>) => { const file = event.target.files?.[0]; if (!file) return; if (!window.confirm("Importer ce fichier remplacera toutes les données actuelles. Continuer ?")) return; try { const document = JSON.parse(await file.text()); const response = await fetch("/api/project", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ confirm: true, document }) }); if (!response.ok) throw new Error((await response.json()).error); router.refresh(); } catch (error) { setImportError(error instanceof Error ? error.message : "Import impossible."); } finally { event.target.value = ""; } };
-  return <div id="app"><header className="top"><div className="brand"><div className="brand-mark">PW</div><div><div className="brand-name">{project.meta.project.name.split(" — ")[0]}</div><div className="brand-sub">{project.meta.project.name.split(" — ").slice(1).join(" — ") || "Gestion de projet"}</div></div></div><nav className="tabs" role="tablist">{(["list", "timeline", "capacity"] as View[]).map((item) => <button key={item} className="tab" role="tab" aria-selected={view === item} onClick={() => setView(item)}>{item === "list" ? "Liste" : item === "timeline" ? "Timeline" : "Capacité"}</button>)}</nav><div className="top-actions"><span className="pill"><i className={`dot${canEdit ? "" : " warn"}`} />{canEdit ? "Édition" : "Lecture seule"}</span>{canEdit ? <button className="btn ghost" onClick={async () => { await fetch("/api/session", { method: "DELETE" }); router.refresh(); }}>Déconnexion</button> : <button className="btn ghost" onClick={() => setLogin(true)}>Connexion</button>}<button className="btn ghost" disabled>Annuler</button>{canEdit && <><input ref={importInput} className="sr-only" type="file" accept="application/json,.json" onChange={onImport} /><button className="btn" onClick={() => importInput.current?.click()}>Importer un .json</button></>}<button className="btn" onClick={() => download(project)}>Exporter</button></div></header>{importError && <div className="notice error">{importError}</div>}<div className="toolbar">{view !== "capacity" && <label className="search">⌕<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Rechercher une activité" /></label>}<div className="chips">{resources.map((resource) => <button key={resource.id} className="chip-f" style={{ "--rc": resource.color } as React.CSSProperties} aria-pressed={filter === resource.id} onClick={() => setFilter(filter === resource.id ? "" : resource.id)}><Avatar resource={resource} />{resource.name}</button>)}</div><span className="spacer" />{view === "timeline" && <><span className="mut">Responsable</span><button className="btn">Aujourd’hui</button><button className="btn">PDF</button></>}{view === "list" && <><button className="btn" disabled={!canEdit}>+ Section</button><button className="btn" disabled={!canEdit}>+ Jalon</button><button className="btn primary" disabled={!canEdit}>+ Activité</button></>}</div><main>{view === "list" ? <><div className="kpis"><Kpi label="Charge estimée" value={`${decimal.format(total)} h`} /><Kpi label="Réalisé" value={`${decimal.format(actual)} h`} /><Kpi label="Reste à faire" value={`${decimal.format(remaining)} h`} /><Kpi label="Avancement" value={`${actual + remaining ? Math.round(actual / (actual + remaining) * 100) : 0} %`} /><Kpi label="Activités terminées" value={`${activities.filter((activity) => activity.status === "done").length} / ${activities.length}`} /><Kpi label="Semaines en surcharge" value={String(overloads)} /><Kpi label="Dépendances violées" value={String(violated)} /></div><div className="panel"><table className="grid"><thead><tr><th>WBS</th><th>Activité</th><th>Ressources</th><th>Début</th><th>Fin</th><th>Durée</th><th>Estimé</th><th>Réel</th><th>Reste</th><th>Avancement</th><th>Dépend de</th><th>Statut</th></tr></thead><tbody>{Object.values(project.sections).sort((a, b) => a.order - b.order).map((section) => <Section key={section.id} section={section} activities={activities.filter((activity) => activity.section === section.id && matches(activity))} milestones={milestones.filter((milestone) => milestone.section === section.id)} project={project} collapsed={!!collapsed[section.id]} toggle={() => setCollapsed({ ...collapsed, [section.id]: !collapsed[section.id] })} select={setSelected} />)}</tbody></table></div></> : view === "timeline" ? <Timeline project={project} query={query} collapsed={collapsed} toggle={(id) => setCollapsed({ ...collapsed, [id]: !collapsed[id] })} select={setSelected} /> : <Capacity project={project} resources={resources} weeks={weeks} loads={loads} calendar={calendar} select={setSelected} />}</main>{selected && <Detail project={project} id={selected} canEdit={canEdit} close={() => setSelected(null)} />}{login && <Login onClose={() => setLogin(false)} onSuccess={() => router.refresh()} />}<footer>Powered by <a href="https://github.com/planward/planward">Planward</a></footer></div>;
+  const router = useRouter();
+  const importInput = useRef<HTMLInputElement>(null);
+  const [view, setView] = useState<View>("list");
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("");
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [selected, setSelected] = useState<string | null>(null);
+  const [login, setLogin] = useState(false);
+  const [importError, setImportError] = useState("");
+  const resources = useMemo(
+    () => Object.values(project?.resources ?? {}).sort((a, b) => a.order - b.order),
+    [project],
+  );
+  if (!project)
+    return (
+      <main className="empty">
+        <h1>Aucune donnée</h1>
+        <p>Importe une sauvegarde .json pour démarrer.</p>
+      </main>
+    );
+  const activities = Object.values(project.activities);
+  const milestones = Object.values(project.milestones);
+  const calendar = { weekDays: project.meta.project.weekDays, holidays: project.holidays };
+  const loads = projectLoads(project, calendar);
+  const total = activities.reduce((value, activity) => value + activity.estimate, 0);
+  const actual = activities.reduce(
+    (value, activity) =>
+      value +
+      Object.values(activity.assign).reduce((sum, assignment) => sum + assignment.actual, 0),
+    0,
+  );
+  const remaining = activities.reduce(
+    (value, activity) =>
+      value +
+      Object.values(activity.assign).reduce((sum, assignment) => sum + assignment.remaining, 0),
+    0,
+  );
+  const weeks = timelineWeeks(project);
+  const overloads = resources.reduce(
+    (count, resource) =>
+      count +
+      weeks.filter(
+        (week) =>
+          (loads[resource.id]?.[week] ?? 0) > weeklyCapacity(resource, week, calendar) + 0.05,
+      ).length,
+    0,
+  );
+  const violated = Object.values(project.deps).filter(
+    (dependency) => nodeEnd(project, dependency.from) > nodeStart(project, dependency.to),
+  ).length;
+  const matches = (activity: PlanwardDocument["activities"][string]) =>
+    (!query ||
+      `${activity.name} ${activity.code} ${activity.wbs}`
+        .toLowerCase()
+        .includes(query.toLowerCase())) &&
+    (!filter || activity.owner === filter || filter in activity.assign);
+  const onImport = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!window.confirm("Importer ce fichier remplacera toutes les données actuelles. Continuer ?"))
+      return;
+    try {
+      const document = JSON.parse(await file.text());
+      const response = await fetch("/api/project", {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ confirm: true, document }),
+      });
+      if (!response.ok) throw new Error((await response.json()).error);
+      router.refresh();
+    } catch (error) {
+      setImportError(error instanceof Error ? error.message : "Import impossible.");
+    } finally {
+      event.target.value = "";
+    }
+  };
+  return (
+    <div id="app">
+      <header className="top">
+        <div className="brand">
+          <div className="brand-mark">PW</div>
+          <div>
+            <div className="brand-name">{project.meta.project.name.split(" — ")[0]}</div>
+            <div className="brand-sub">
+              {project.meta.project.name.split(" — ").slice(1).join(" — ") || "Gestion de projet"}
+            </div>
+          </div>
+        </div>
+        <nav className="tabs" role="tablist">
+          {(["list", "timeline", "capacity"] as View[]).map((item) => (
+            <button
+              key={item}
+              className="tab"
+              role="tab"
+              aria-selected={view === item}
+              onClick={() => setView(item)}
+            >
+              {item === "list" ? "Liste" : item === "timeline" ? "Timeline" : "Capacité"}
+            </button>
+          ))}
+        </nav>
+        <div className="top-actions">
+          <span className="pill">
+            <i className={`dot${canEdit ? "" : " warn"}`} />
+            {canEdit ? "Édition" : "Lecture seule"}
+          </span>
+          {canEdit ? (
+            <button
+              className="btn ghost"
+              onClick={async () => {
+                await fetch("/api/session", { method: "DELETE" });
+                router.refresh();
+              }}
+            >
+              Déconnexion
+            </button>
+          ) : (
+            <button className="btn ghost" onClick={() => setLogin(true)}>
+              Connexion
+            </button>
+          )}
+          <button className="btn ghost" disabled>
+            Annuler
+          </button>
+          {canEdit && (
+            <>
+              <input
+                ref={importInput}
+                className="sr-only"
+                type="file"
+                accept="application/json,.json"
+                onChange={onImport}
+              />
+              <button className="btn" onClick={() => importInput.current?.click()}>
+                Importer un .json
+              </button>
+            </>
+          )}
+          <button className="btn" onClick={() => download(project)}>
+            Exporter
+          </button>
+          <button className="btn" onClick={() => void exportSpreadsheet(project)}>
+            XLSX
+          </button>
+        </div>
+      </header>
+      {importError && <div className="notice error">{importError}</div>}
+      <div className="toolbar">
+        {view !== "capacity" && (
+          <label className="search">
+            ⌕
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Rechercher une activité"
+            />
+          </label>
+        )}
+        <div className="chips">
+          {resources.map((resource) => (
+            <button
+              key={resource.id}
+              className="chip-f"
+              style={{ "--rc": resource.color } as React.CSSProperties}
+              aria-pressed={filter === resource.id}
+              onClick={() => setFilter(filter === resource.id ? "" : resource.id)}
+            >
+              <Avatar resource={resource} />
+              {resource.name}
+            </button>
+          ))}
+        </div>
+        <span className="spacer" />
+        {view === "timeline" && (
+          <>
+            <span className="mut">Responsable</span>
+            <button className="btn">Aujourd’hui</button>
+            <button className="btn" onClick={() => void exportTimelinePdf(project)}>
+              PDF
+            </button>
+          </>
+        )}
+        {view === "list" && (
+          <>
+            <button className="btn" disabled={!canEdit}>
+              + Section
+            </button>
+            <button className="btn" disabled={!canEdit}>
+              + Jalon
+            </button>
+            <button className="btn primary" disabled={!canEdit}>
+              + Activité
+            </button>
+          </>
+        )}
+      </div>
+      <main>
+        {view === "list" ? (
+          <>
+            <div className="kpis">
+              <Kpi label="Charge estimée" value={`${decimal.format(total)} h`} />
+              <Kpi label="Réalisé" value={`${decimal.format(actual)} h`} />
+              <Kpi label="Reste à faire" value={`${decimal.format(remaining)} h`} />
+              <Kpi
+                label="Avancement"
+                value={`${actual + remaining ? Math.round((actual / (actual + remaining)) * 100) : 0} %`}
+              />
+              <Kpi
+                label="Activités terminées"
+                value={`${activities.filter((activity) => activity.status === "done").length} / ${activities.length}`}
+              />
+              <Kpi label="Semaines en surcharge" value={String(overloads)} />
+              <Kpi label="Dépendances violées" value={String(violated)} />
+            </div>
+            <div className="panel">
+              <table className="grid">
+                <thead>
+                  <tr>
+                    <th>WBS</th>
+                    <th>Activité</th>
+                    <th>Ressources</th>
+                    <th>Début</th>
+                    <th>Fin</th>
+                    <th>Durée</th>
+                    <th>Estimé</th>
+                    <th>Réel</th>
+                    <th>Reste</th>
+                    <th>Avancement</th>
+                    <th>Dépend de</th>
+                    <th>Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.values(project.sections)
+                    .sort((a, b) => a.order - b.order)
+                    .map((section) => (
+                      <Section
+                        key={section.id}
+                        section={section}
+                        activities={activities.filter(
+                          (activity) => activity.section === section.id && matches(activity),
+                        )}
+                        milestones={milestones.filter(
+                          (milestone) => milestone.section === section.id,
+                        )}
+                        project={project}
+                        collapsed={!!collapsed[section.id]}
+                        toggle={() =>
+                          setCollapsed({ ...collapsed, [section.id]: !collapsed[section.id] })
+                        }
+                        select={setSelected}
+                      />
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        ) : view === "timeline" ? (
+          <Timeline
+            project={project}
+            query={query}
+            collapsed={collapsed}
+            toggle={(id) => setCollapsed({ ...collapsed, [id]: !collapsed[id] })}
+            select={setSelected}
+          />
+        ) : (
+          <Capacity
+            project={project}
+            resources={resources}
+            weeks={weeks}
+            loads={loads}
+            calendar={calendar}
+            select={setSelected}
+          />
+        )}
+      </main>
+      {selected && (
+        <Detail project={project} id={selected} canEdit={canEdit} close={() => setSelected(null)} />
+      )}
+      {login && <Login onClose={() => setLogin(false)} onSuccess={() => router.refresh()} />}
+      <footer>
+        Powered by <a href="https://github.com/planward/planward">Planward</a>
+      </footer>
+    </div>
+  );
 }
 
-function Kpi({ label, value }: { label: string; value: string }) { return <div className="kpi"><span>{label}</span><b>{value}</b></div>; }
-function nodeStart(project: PlanwardDocument, id: string) { return project.activities[id]?.start ?? project.milestones[id]?.date ?? ""; }
-function nodeEnd(project: PlanwardDocument, id: string) { return project.activities[id]?.end ?? project.milestones[id]?.date ?? ""; }
-function timelineWeeks(project: PlanwardDocument) { const dates = [...Object.values(project.activities).flatMap((activity) => [activity.start, activity.end]), ...Object.values(project.milestones).map((milestone) => milestone.date)].filter(Boolean).sort(); if (!dates.length) return []; const result: string[] = []; for (let week = isoMonday(dates[0]); week <= isoMonday(dates.at(-1)!); week = addCalendarDays(week, 7)) result.push(week); return result; }
-function formatDate(value: string) { return value ? `${value.slice(8, 10)}/${value.slice(5, 7)}` : ""; }
-function download(project: PlanwardDocument) { const blob = new Blob([JSON.stringify({ ...project, exportedAt: new Date().toISOString() }, null, 2)], { type: "application/json" }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "planward.json"; link.click(); URL.revokeObjectURL(link.href); }
-function Login({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) { const [error, setError] = useState(""); const submit = async (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); const password = new FormData(event.currentTarget).get("password"); const response = await fetch("/api/session", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ password }) }); if (!response.ok) { setError("Mot de passe incorrect ou tentative temporairement bloquée."); return; } onClose(); onSuccess(); }; return <div className="scrim"><form className="login" onSubmit={submit}><button type="button" className="iconbtn" onClick={onClose}>×</button><h2>Connexion administrateur</h2><label>Mot de passe<input className="inp" name="password" type="password" autoFocus required /></label>{error && <p className="error">{error}</p>}<button className="btn primary">Connexion</button></form></div>; }
-function Detail({ project, id, canEdit, close }: { project: PlanwardDocument; id: string; canEdit: boolean; close: () => void }) { const activity = project.activities[id]; const milestone = project.milestones[id]; const item = activity ?? milestone; if (!item) return null; const predecessors = Object.values(project.deps).filter((dependency) => dependency.to === id); const successors = Object.values(project.deps).filter((dependency) => dependency.from === id); return <aside className="drawer" role="dialog" aria-label="Détail"><div className="dr-h"><div><div className="ref">{activity ? `${activity.wbs}${activity.code ? ` · ${activity.code}` : ""}` : "Jalon"}</div><h2>{item.name}</h2></div><button className="iconbtn" onClick={close}>×</button></div><div className="dr-b"><p className="mut">{canEdit ? "Édition de l’élément bientôt disponible." : "Lecture seule : ton accès à cette page ne permet pas de modifier."}</p><section className="detail-section"><h3>Planification</h3><dl><dt>Responsable</dt><dd>{project.resources[item.owner]?.name ?? "—"}</dd><dt>Statut</dt><dd>{labels[item.status]}</dd>{activity ? <><dt>Début</dt><dd>{activity.start}</dd><dt>Fin</dt><dd>{activity.end}</dd><dt>Durée</dt><dd>{activity.dur} jours ouvrés</dd><dt>Charge estimée</dt><dd>{decimal.format(activity.estimate)} h</dd></> : <><dt>Date</dt><dd>{milestone.date}</dd></>}</dl></section>{activity && <section className="detail-section"><h3>Affectations</h3>{Object.entries(activity.assign).map(([resourceId, assignment]) => <div className="assignment" key={resourceId}><span>{project.resources[resourceId]?.name ?? resourceId}</span><span>{decimal.format(assignment.planned)} / {decimal.format(assignment.actual)} / {decimal.format(assignment.remaining)} h</span></div>)}</section>}<section className="detail-section"><h3>Dépend de</h3>{predecessors.map((dependency) => <p key={dependency.id}>{project.activities[dependency.from]?.name ?? project.milestones[dependency.from]?.name ?? dependency.from}</p>) || <p className="mut">Aucune</p>}</section><section className="detail-section"><h3>Bloque</h3>{successors.map((dependency) => <p key={dependency.id}>{project.activities[dependency.to]?.name ?? project.milestones[dependency.to]?.name ?? dependency.to}</p>) || <p className="mut">Aucune</p>}</section><section className="detail-section"><h3>Description</h3><p>{item.desc || "—"}</p></section></div></aside>; }
-function Timeline({ project, query, collapsed, toggle, select }: { project: PlanwardDocument; query: string; collapsed: Record<string, boolean>; toggle: (id: string) => void; select: (id: string) => void }) { const all = [...Object.values(project.activities), ...Object.values(project.milestones)]; const dates = all.flatMap((item) => ["start" in item ? item.start : item.date, "end" in item ? item.end : item.date]).sort(); const start = dates[0]; const end = dates.at(-1); if (!start || !end) return <div className="panel empty"><p>Aucune date à afficher.</p></div>; const days = Math.max(1, Math.round((Date.parse(`${end}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / 86400000) + 1); const scale = 12; const shown = (name: string) => !query || name.toLowerCase().includes(query.toLowerCase()); return <div className="tl"><div className="tl-in" style={{ gridTemplateColumns: `var(--left) ${days * scale}px` }}><div className="tl-corner">Activité</div><div className="tl-head">{timelineWeeks(project).map((week) => <div key={week} className="tl-wk" style={{ left: `${Math.max(0, Math.round((Date.parse(`${week}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / 86400000) * scale)}px`, width: `${7 * scale}px` }}>{formatDate(week)}</div>)}</div><div className="tl-labels">{Object.values(project.sections).sort((a, b) => a.order - b.order).map((section) => { const sectionActivities = Object.values(project.activities).filter((activity) => activity.section === section.id && shown(activity.name)); const sectionMilestones = Object.values(project.milestones).filter((milestone) => milestone.section === section.id && shown(milestone.name)); if (!sectionActivities.length && !sectionMilestones.length) return null; return <div key={section.id}><div className="tl-row sec"><button className="caret" onClick={() => toggle(section.id)}>{collapsed[section.id] ? "›" : "⌄"}</button><span className="t">{section.name}</span></div>{!collapsed[section.id] && sectionActivities.map((activity) => <button className="tl-row" key={activity.id} onClick={() => select(activity.id)}><span className="t">{activity.name}</span><span className="h">{decimal.format(activity.estimate)} h</span></button>)}{!collapsed[section.id] && sectionMilestones.map((milestone) => <button className="tl-row ms" key={milestone.id} onClick={() => select(milestone.id)}><span className="t">◆ {milestone.name}</span></button>)}</div>; })}</div><div className="tl-body" style={{ width: days * scale }}>{Object.values(project.sections).sort((a, b) => a.order - b.order).map((section, sectionIndex) => { const color = ["#3E93CF", "#1C9E95", "#7C6BD6", "#E0795B", "#D19A2E", "#C75C98"][sectionIndex % 6]; const sectionActivities = Object.values(project.activities).filter((activity) => activity.section === section.id && shown(activity.name)); const sectionMilestones = Object.values(project.milestones).filter((milestone) => milestone.section === section.id && shown(milestone.name)); if (!sectionActivities.length && !sectionMilestones.length) return null; return <div key={section.id}><div className="tl-track sec" />{!collapsed[section.id] && sectionActivities.map((activity) => <div className="tl-track" key={activity.id}><button className="tl-bar" onClick={() => select(activity.id)} style={{ left: `${Math.round((Date.parse(`${activity.start}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / 86400000) * scale}px`, width: `${Math.max(scale, (Math.round((Date.parse(`${activity.end}T00:00:00Z`) - Date.parse(`${activity.start}T00:00:00Z`)) / 86400000) + 1) * scale)}px`, background: project.resources[activity.owner]?.color ?? color }} /> </div>)}{!collapsed[section.id] && sectionMilestones.map((milestone) => <div className="tl-track" key={milestone.id}><button className="tl-ms" onClick={() => select(milestone.id)} style={{ left: `${Math.round((Date.parse(`${milestone.date}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / 86400000) * scale - 5}px` }}>◆</button></div>)}</div>; })}</div></div></div>; }
-function Capacity({ project, resources, weeks, loads, calendar, select }: { project: PlanwardDocument; resources: PlanwardDocument["resources"][string][]; weeks: string[]; loads: Record<string, Record<string, number>>; calendar: { weekDays: number[]; holidays: PlanwardDocument["holidays"] }; select: (id: string) => void }) { return <div className="cap-wrap"><table className="cap"><thead><tr><th className="rh">Ressource · dispo par défaut</th>{weeks.map((week) => <th key={week}>{formatDate(week)}<em>S{week.slice(-2)}</em></th>)}</tr></thead><tbody>{resources.map((resource) => <tr key={resource.id}><th className="rh"><div className="rh-in"><Avatar resource={resource} /><div><div className="nm">{resource.name}</div><div className="tm">{resource.team.replace(/\s*\(.*/, "")}</div></div><span className="dflt">{decimal.format(resource.defaultCap)} h/sem</span></div></th>{weeks.map((week) => { const load = loads[resource.id]?.[week] ?? 0; const capacity = weeklyCapacity(resource, week, calendar); const percent = occupancy(load, capacity); return <td key={week}><button className={`cc ${percent > 1.2 ? "h5" : percent > 1 ? "h4" : percent > .8 ? "h3" : percent > .5 ? "h2" : "h1"}`} title={`${resource.name}, semaine du ${formatDate(week)}`} onClick={() => { const activity = Object.values(project.activities).find((item) => item.assign[resource.id] && item.start <= addCalendarDays(week, 6) && item.end >= week); if (activity) select(activity.id); }}><span className="p">{capacity ? `${Math.round(percent * 100)} %` : "–"}</span><span className="l">{decimal.format(load)} / {decimal.format(capacity)} h</span></button></td>; })}</tr>)}<tr className="tot"><th className="rh">Équipe</th>{weeks.map((week) => { const load = resources.reduce((sum, resource) => sum + (loads[resource.id]?.[week] ?? 0), 0); const capacity = resources.reduce((sum, resource) => sum + weeklyCapacity(resource, week, calendar), 0); return <td key={week}><div className="cc h2"><span className="p">{capacity ? `${Math.round(load / capacity * 100)} %` : "–"}</span><span className="l">{decimal.format(load)} / {decimal.format(capacity)} h</span></div></td>; })}</tr></tbody></table></div>; }
-function Section({ section, activities, milestones, project, collapsed, toggle, select }: { section: PlanwardDocument["sections"][string]; activities: PlanwardDocument["activities"][string][]; milestones: PlanwardDocument["milestones"][string][]; project: PlanwardDocument; collapsed: boolean; toggle: () => void; select: (id: string) => void }) { return <>{<tr className="sec"><td>{section.order}</td><td colSpan={12}><button className="caret" onClick={toggle}>{collapsed ? "›" : "⌄"}</button><button className="sname slink">{section.name}</button><span className="pnum">P{section.priority}</span></td></tr>}{!collapsed && activities.map((activity) => { const actual = Object.values(activity.assign).reduce((sum, assignment) => sum + assignment.actual, 0); const remaining = Object.values(activity.assign).reduce((sum, assignment) => sum + assignment.remaining, 0); const progress = actual + remaining ? Math.round(actual / (actual + remaining) * 100) : 0; return <tr className="act" key={activity.id} onClick={() => select(activity.id)}><td className="wbs">{activity.wbs}</td><td className="aname"><span className="t">{activity.name}</span>{activity.code && <span className="c">{activity.code}</span>}</td><td><span className="res">{Object.keys(activity.assign).map((id) => project.resources[id] && <Avatar key={id} resource={project.resources[id]} />)}</span></td><td className="num">{activity.start.slice(8, 10)}/{activity.start.slice(5, 7)}</td><td className="num">{activity.end.slice(8, 10)}/{activity.end.slice(5, 7)}</td><td className="num">{activity.dur} j</td><td className="num">{decimal.format(activity.estimate)} h</td><td className="num">{decimal.format(actual)} h</td><td className="num">{decimal.format(remaining)} h</td><td className="num">{decimal.format(actual + remaining - activity.estimate)}</td><td><div className="prog"><i><b style={{ width: `${progress}%` }} /></i><span>{progress}%</span></div></td><td className="mut">·</td><td><span className={`status ${activity.status}`}>{labels[activity.status]}</span></td></tr>; })}{!collapsed && milestones.map((milestone) => <tr className="act" key={milestone.id} onClick={() => select(milestone.id)}><td>◆</td><td className="aname"><span className="t">{milestone.name}</span><span className="c">Jalon</span></td><td>{project.resources[milestone.owner] && <Avatar resource={project.resources[milestone.owner]} />}</td><td className="num">{milestone.date.slice(8, 10)}/{milestone.date.slice(5, 7)}</td><td colSpan={9} /><td><span className={`status ${milestone.status}`}>{labels[milestone.status]}</span></td></tr>)}</>; }
+function Kpi({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="kpi">
+      <span>{label}</span>
+      <b>{value}</b>
+    </div>
+  );
+}
+function nodeStart(project: PlanwardDocument, id: string) {
+  return project.activities[id]?.start ?? project.milestones[id]?.date ?? "";
+}
+function nodeEnd(project: PlanwardDocument, id: string) {
+  return project.activities[id]?.end ?? project.milestones[id]?.date ?? "";
+}
+function timelineWeeks(project: PlanwardDocument) {
+  const dates = [
+    ...Object.values(project.activities).flatMap((activity) => [activity.start, activity.end]),
+    ...Object.values(project.milestones).map((milestone) => milestone.date),
+  ]
+    .filter(Boolean)
+    .sort();
+  if (!dates.length) return [];
+  const result: string[] = [];
+  for (
+    let week = isoMonday(dates[0]);
+    week <= isoMonday(dates.at(-1)!);
+    week = addCalendarDays(week, 7)
+  )
+    result.push(week);
+  return result;
+}
+function formatDate(value: string) {
+  return value ? `${value.slice(8, 10)}/${value.slice(5, 7)}` : "";
+}
+function download(project: PlanwardDocument) {
+  const blob = new Blob(
+    [JSON.stringify({ ...project, exportedAt: new Date().toISOString() }, null, 2)],
+    { type: "application/json" },
+  );
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "planward.json";
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+function Login({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
+  const [error, setError] = useState("");
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const password = new FormData(event.currentTarget).get("password");
+    const response = await fetch("/api/session", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ password }),
+    });
+    if (!response.ok) {
+      setError("Mot de passe incorrect ou tentative temporairement bloquée.");
+      return;
+    }
+    onClose();
+    onSuccess();
+  };
+  return (
+    <div className="scrim">
+      <form className="login" onSubmit={submit}>
+        <button type="button" className="iconbtn" onClick={onClose}>
+          ×
+        </button>
+        <h2>Connexion administrateur</h2>
+        <label>
+          Mot de passe
+          <input className="inp" name="password" type="password" autoFocus required />
+        </label>
+        {error && <p className="error">{error}</p>}
+        <button className="btn primary">Connexion</button>
+      </form>
+    </div>
+  );
+}
+function Detail({
+  project,
+  id,
+  canEdit,
+  close,
+}: {
+  project: PlanwardDocument;
+  id: string;
+  canEdit: boolean;
+  close: () => void;
+}) {
+  const activity = project.activities[id];
+  const milestone = project.milestones[id];
+  const item = activity ?? milestone;
+  if (!item) return null;
+  const predecessors = Object.values(project.deps).filter((dependency) => dependency.to === id);
+  const successors = Object.values(project.deps).filter((dependency) => dependency.from === id);
+  return (
+    <aside className="drawer" role="dialog" aria-label="Détail">
+      <div className="dr-h">
+        <div>
+          <div className="ref">
+            {activity ? `${activity.wbs}${activity.code ? ` · ${activity.code}` : ""}` : "Jalon"}
+          </div>
+          <h2>{item.name}</h2>
+        </div>
+        <button className="iconbtn" onClick={close}>
+          ×
+        </button>
+      </div>
+      <div className="dr-b">
+        <p className="mut">
+          {canEdit
+            ? "Édition de l’élément bientôt disponible."
+            : "Lecture seule : ton accès à cette page ne permet pas de modifier."}
+        </p>
+        <section className="detail-section">
+          <h3>Planification</h3>
+          <dl>
+            <dt>Responsable</dt>
+            <dd>{project.resources[item.owner]?.name ?? "—"}</dd>
+            <dt>Statut</dt>
+            <dd>{labels[item.status]}</dd>
+            {activity ? (
+              <>
+                <dt>Début</dt>
+                <dd>{activity.start}</dd>
+                <dt>Fin</dt>
+                <dd>{activity.end}</dd>
+                <dt>Durée</dt>
+                <dd>{activity.dur} jours ouvrés</dd>
+                <dt>Charge estimée</dt>
+                <dd>{decimal.format(activity.estimate)} h</dd>
+              </>
+            ) : (
+              <>
+                <dt>Date</dt>
+                <dd>{milestone.date}</dd>
+              </>
+            )}
+          </dl>
+        </section>
+        {activity && (
+          <section className="detail-section">
+            <h3>Affectations</h3>
+            {Object.entries(activity.assign).map(([resourceId, assignment]) => (
+              <div className="assignment" key={resourceId}>
+                <span>{project.resources[resourceId]?.name ?? resourceId}</span>
+                <span>
+                  {decimal.format(assignment.planned)} / {decimal.format(assignment.actual)} /{" "}
+                  {decimal.format(assignment.remaining)} h
+                </span>
+              </div>
+            ))}
+          </section>
+        )}
+        <section className="detail-section">
+          <h3>Dépend de</h3>
+          {predecessors.map((dependency) => (
+            <p key={dependency.id}>
+              {project.activities[dependency.from]?.name ??
+                project.milestones[dependency.from]?.name ??
+                dependency.from}
+            </p>
+          )) || <p className="mut">Aucune</p>}
+        </section>
+        <section className="detail-section">
+          <h3>Bloque</h3>
+          {successors.map((dependency) => (
+            <p key={dependency.id}>
+              {project.activities[dependency.to]?.name ??
+                project.milestones[dependency.to]?.name ??
+                dependency.to}
+            </p>
+          )) || <p className="mut">Aucune</p>}
+        </section>
+        <section className="detail-section">
+          <h3>Description</h3>
+          <p>{item.desc || "—"}</p>
+        </section>
+      </div>
+    </aside>
+  );
+}
+function Timeline({
+  project,
+  query,
+  collapsed,
+  toggle,
+  select,
+}: {
+  project: PlanwardDocument;
+  query: string;
+  collapsed: Record<string, boolean>;
+  toggle: (id: string) => void;
+  select: (id: string) => void;
+}) {
+  const all = [...Object.values(project.activities), ...Object.values(project.milestones)];
+  const dates = all
+    .flatMap((item) => [
+      "start" in item ? item.start : item.date,
+      "end" in item ? item.end : item.date,
+    ])
+    .sort();
+  const start = dates[0];
+  const end = dates.at(-1);
+  if (!start || !end)
+    return (
+      <div className="panel empty">
+        <p>Aucune date à afficher.</p>
+      </div>
+    );
+  const days = Math.max(
+    1,
+    Math.round((Date.parse(`${end}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / 86400000) + 1,
+  );
+  const scale = 12;
+  const shown = (name: string) => !query || name.toLowerCase().includes(query.toLowerCase());
+  return (
+    <div className="tl">
+      <div className="tl-in" style={{ gridTemplateColumns: `var(--left) ${days * scale}px` }}>
+        <div className="tl-corner">Activité</div>
+        <div className="tl-head">
+          {timelineWeeks(project).map((week) => (
+            <div
+              key={week}
+              className="tl-wk"
+              style={{
+                left: `${Math.max(0, Math.round((Date.parse(`${week}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / 86400000) * scale)}px`,
+                width: `${7 * scale}px`,
+              }}
+            >
+              {formatDate(week)}
+            </div>
+          ))}
+        </div>
+        <div className="tl-labels">
+          {Object.values(project.sections)
+            .sort((a, b) => a.order - b.order)
+            .map((section) => {
+              const sectionActivities = Object.values(project.activities).filter(
+                (activity) => activity.section === section.id && shown(activity.name),
+              );
+              const sectionMilestones = Object.values(project.milestones).filter(
+                (milestone) => milestone.section === section.id && shown(milestone.name),
+              );
+              if (!sectionActivities.length && !sectionMilestones.length) return null;
+              return (
+                <div key={section.id}>
+                  <div className="tl-row sec">
+                    <button className="caret" onClick={() => toggle(section.id)}>
+                      {collapsed[section.id] ? "›" : "⌄"}
+                    </button>
+                    <span className="t">{section.name}</span>
+                  </div>
+                  {!collapsed[section.id] &&
+                    sectionActivities.map((activity) => (
+                      <button
+                        className="tl-row"
+                        key={activity.id}
+                        onClick={() => select(activity.id)}
+                      >
+                        <span className="t">{activity.name}</span>
+                        <span className="h">{decimal.format(activity.estimate)} h</span>
+                      </button>
+                    ))}
+                  {!collapsed[section.id] &&
+                    sectionMilestones.map((milestone) => (
+                      <button
+                        className="tl-row ms"
+                        key={milestone.id}
+                        onClick={() => select(milestone.id)}
+                      >
+                        <span className="t">◆ {milestone.name}</span>
+                      </button>
+                    ))}
+                </div>
+              );
+            })}
+        </div>
+        <div className="tl-body" style={{ width: days * scale }}>
+          {Object.values(project.sections)
+            .sort((a, b) => a.order - b.order)
+            .map((section, sectionIndex) => {
+              const color = ["#3E93CF", "#1C9E95", "#7C6BD6", "#E0795B", "#D19A2E", "#C75C98"][
+                sectionIndex % 6
+              ];
+              const sectionActivities = Object.values(project.activities).filter(
+                (activity) => activity.section === section.id && shown(activity.name),
+              );
+              const sectionMilestones = Object.values(project.milestones).filter(
+                (milestone) => milestone.section === section.id && shown(milestone.name),
+              );
+              if (!sectionActivities.length && !sectionMilestones.length) return null;
+              return (
+                <div key={section.id}>
+                  <div className="tl-track sec" />
+                  {!collapsed[section.id] &&
+                    sectionActivities.map((activity) => (
+                      <div className="tl-track" key={activity.id}>
+                        <button
+                          className="tl-bar"
+                          onClick={() => select(activity.id)}
+                          style={{
+                            left: `${Math.round((Date.parse(`${activity.start}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / 86400000) * scale}px`,
+                            width: `${Math.max(scale, (Math.round((Date.parse(`${activity.end}T00:00:00Z`) - Date.parse(`${activity.start}T00:00:00Z`)) / 86400000) + 1) * scale)}px`,
+                            background: project.resources[activity.owner]?.color ?? color,
+                          }}
+                        />{" "}
+                      </div>
+                    ))}
+                  {!collapsed[section.id] &&
+                    sectionMilestones.map((milestone) => (
+                      <div className="tl-track" key={milestone.id}>
+                        <button
+                          className="tl-ms"
+                          onClick={() => select(milestone.id)}
+                          style={{
+                            left: `${Math.round((Date.parse(`${milestone.date}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / 86400000) * scale - 5}px`,
+                          }}
+                        >
+                          ◆
+                        </button>
+                      </div>
+                    ))}
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    </div>
+  );
+}
+function Capacity({
+  project,
+  resources,
+  weeks,
+  loads,
+  calendar,
+  select,
+}: {
+  project: PlanwardDocument;
+  resources: PlanwardDocument["resources"][string][];
+  weeks: string[];
+  loads: Record<string, Record<string, number>>;
+  calendar: { weekDays: number[]; holidays: PlanwardDocument["holidays"] };
+  select: (id: string) => void;
+}) {
+  return (
+    <div className="cap-wrap">
+      <table className="cap">
+        <thead>
+          <tr>
+            <th className="rh">Ressource · dispo par défaut</th>
+            {weeks.map((week) => (
+              <th key={week}>
+                {formatDate(week)}
+                <em>S{week.slice(-2)}</em>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {resources.map((resource) => (
+            <tr key={resource.id}>
+              <th className="rh">
+                <div className="rh-in">
+                  <Avatar resource={resource} />
+                  <div>
+                    <div className="nm">{resource.name}</div>
+                    <div className="tm">{resource.team.replace(/\s*\(.*/, "")}</div>
+                  </div>
+                  <span className="dflt">{decimal.format(resource.defaultCap)} h/sem</span>
+                </div>
+              </th>
+              {weeks.map((week) => {
+                const load = loads[resource.id]?.[week] ?? 0;
+                const capacity = weeklyCapacity(resource, week, calendar);
+                const percent = occupancy(load, capacity);
+                return (
+                  <td key={week}>
+                    <button
+                      className={`cc ${percent > 1.2 ? "h5" : percent > 1 ? "h4" : percent > 0.8 ? "h3" : percent > 0.5 ? "h2" : "h1"}`}
+                      title={`${resource.name}, semaine du ${formatDate(week)}`}
+                      onClick={() => {
+                        const activity = Object.values(project.activities).find(
+                          (item) =>
+                            item.assign[resource.id] &&
+                            item.start <= addCalendarDays(week, 6) &&
+                            item.end >= week,
+                        );
+                        if (activity) select(activity.id);
+                      }}
+                    >
+                      <span className="p">{capacity ? `${Math.round(percent * 100)} %` : "–"}</span>
+                      <span className="l">
+                        {decimal.format(load)} / {decimal.format(capacity)} h
+                      </span>
+                    </button>
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+          <tr className="tot">
+            <th className="rh">Équipe</th>
+            {weeks.map((week) => {
+              const load = resources.reduce(
+                (sum, resource) => sum + (loads[resource.id]?.[week] ?? 0),
+                0,
+              );
+              const capacity = resources.reduce(
+                (sum, resource) => sum + weeklyCapacity(resource, week, calendar),
+                0,
+              );
+              return (
+                <td key={week}>
+                  <div className="cc h2">
+                    <span className="p">
+                      {capacity ? `${Math.round((load / capacity) * 100)} %` : "–"}
+                    </span>
+                    <span className="l">
+                      {decimal.format(load)} / {decimal.format(capacity)} h
+                    </span>
+                  </div>
+                </td>
+              );
+            })}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
+function Section({
+  section,
+  activities,
+  milestones,
+  project,
+  collapsed,
+  toggle,
+  select,
+}: {
+  section: PlanwardDocument["sections"][string];
+  activities: PlanwardDocument["activities"][string][];
+  milestones: PlanwardDocument["milestones"][string][];
+  project: PlanwardDocument;
+  collapsed: boolean;
+  toggle: () => void;
+  select: (id: string) => void;
+}) {
+  return (
+    <>
+      {
+        <tr className="sec">
+          <td>{section.order}</td>
+          <td colSpan={12}>
+            <button className="caret" onClick={toggle}>
+              {collapsed ? "›" : "⌄"}
+            </button>
+            <button className="sname slink">{section.name}</button>
+            <span className="pnum">P{section.priority}</span>
+          </td>
+        </tr>
+      }
+      {!collapsed &&
+        activities.map((activity) => {
+          const actual = Object.values(activity.assign).reduce(
+            (sum, assignment) => sum + assignment.actual,
+            0,
+          );
+          const remaining = Object.values(activity.assign).reduce(
+            (sum, assignment) => sum + assignment.remaining,
+            0,
+          );
+          const progress =
+            actual + remaining ? Math.round((actual / (actual + remaining)) * 100) : 0;
+          return (
+            <tr className="act" key={activity.id} onClick={() => select(activity.id)}>
+              <td className="wbs">{activity.wbs}</td>
+              <td className="aname">
+                <span className="t">{activity.name}</span>
+                {activity.code && <span className="c">{activity.code}</span>}
+              </td>
+              <td>
+                <span className="res">
+                  {Object.keys(activity.assign).map(
+                    (id) =>
+                      project.resources[id] && <Avatar key={id} resource={project.resources[id]} />,
+                  )}
+                </span>
+              </td>
+              <td className="num">
+                {activity.start.slice(8, 10)}/{activity.start.slice(5, 7)}
+              </td>
+              <td className="num">
+                {activity.end.slice(8, 10)}/{activity.end.slice(5, 7)}
+              </td>
+              <td className="num">{activity.dur} j</td>
+              <td className="num">{decimal.format(activity.estimate)} h</td>
+              <td className="num">{decimal.format(actual)} h</td>
+              <td className="num">{decimal.format(remaining)} h</td>
+              <td className="num">{decimal.format(actual + remaining - activity.estimate)}</td>
+              <td>
+                <div className="prog">
+                  <i>
+                    <b style={{ width: `${progress}%` }} />
+                  </i>
+                  <span>{progress}%</span>
+                </div>
+              </td>
+              <td className="mut">·</td>
+              <td>
+                <span className={`status ${activity.status}`}>{labels[activity.status]}</span>
+              </td>
+            </tr>
+          );
+        })}
+      {!collapsed &&
+        milestones.map((milestone) => (
+          <tr className="act" key={milestone.id} onClick={() => select(milestone.id)}>
+            <td>◆</td>
+            <td className="aname">
+              <span className="t">{milestone.name}</span>
+              <span className="c">Jalon</span>
+            </td>
+            <td>
+              {project.resources[milestone.owner] && (
+                <Avatar resource={project.resources[milestone.owner]} />
+              )}
+            </td>
+            <td className="num">
+              {milestone.date.slice(8, 10)}/{milestone.date.slice(5, 7)}
+            </td>
+            <td colSpan={9} />
+            <td>
+              <span className={`status ${milestone.status}`}>{labels[milestone.status]}</span>
+            </td>
+          </tr>
+        ))}
+    </>
+  );
+}
