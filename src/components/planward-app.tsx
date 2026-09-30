@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import type { PlanwardDocument } from "@/core/format";
 import { addCalendarDays, isoMonday } from "@/core/calendar";
 import { occupancy, projectLoads, weeklyCapacity } from "@/core/capacity";
+import { optimizeSchedule } from "@/core/optimizer";
 import { exportSpreadsheet, exportTimelinePdf } from "@/export/client";
 
 type Props = { project: PlanwardDocument | null; canEdit: boolean };
@@ -37,6 +38,11 @@ export function PlanwardApp({ project, canEdit }: Props) {
   const [selected, setSelected] = useState<string | null>(null);
   const [login, setLogin] = useState(false);
   const [importError, setImportError] = useState("");
+  const [simulation, setSimulation] = useState<{
+    changed: number;
+    stretched: number;
+    over: number;
+  } | null>(null);
   const resources = useMemo(
     () => Object.values(project?.resources ?? {}).sort((a, b) => a.order - b.order),
     [project],
@@ -103,6 +109,30 @@ export function PlanwardApp({ project, canEdit }: Props) {
     } finally {
       event.target.value = "";
     }
+  };
+  const simulate = () => {
+    const result = optimizeSchedule(
+      {
+        activities: project.activities,
+        milestones: project.milestones,
+        deps: project.deps,
+        resources: project.resources,
+        sections: project.sections,
+        calendar,
+      },
+      {
+        threshold: project.meta.project.autoThreshold,
+        from: project.meta.project.startDate,
+        freezeStarted: true,
+        allowStretch: true,
+        useSectionPriority: true,
+      },
+    );
+    setSimulation({
+      changed: Object.keys(result.draft).length,
+      stretched: result.stretched.length,
+      over: result.overThreshold.length,
+    });
   };
   return (
     <div id="app">
@@ -175,6 +205,12 @@ export function PlanwardApp({ project, canEdit }: Props) {
         </div>
       </header>
       {importError && <div className="notice error">{importError}</div>}
+      {simulation && (
+        <div className="notice">
+          Simulation : {simulation.changed} activité(s) replanifiée(s), {simulation.stretched}{" "}
+          étirée(s), {simulation.over} hors plafond.
+        </div>
+      )}
       <div className="toolbar">
         {view !== "capacity" && (
           <label className="search">
@@ -201,6 +237,9 @@ export function PlanwardApp({ project, canEdit }: Props) {
           ))}
         </div>
         <span className="spacer" />
+        <button className="btn" onClick={simulate}>
+          Optimiser
+        </button>
         {view === "timeline" && (
           <>
             <span className="mut">Responsable</span>
@@ -253,10 +292,10 @@ export function PlanwardApp({ project, canEdit }: Props) {
                     <th>Fin</th>
                     <th>Durée</th>
                     <th>Estimé</th>
-                        <th>Réel</th>
-                        <th>Reste</th>
-                        <th>Écart</th>
-                        <th>Avancement</th>
+                    <th>Réel</th>
+                    <th>Reste</th>
+                    <th>Écart</th>
+                    <th>Avancement</th>
                     <th>Dépend de</th>
                     <th>Statut</th>
                   </tr>
