@@ -470,6 +470,7 @@ function Detail({
             ? "Édition de l’élément bientôt disponible."
             : "Lecture seule : ton accès à cette page ne permet pas de modifier."}
         </p>
+        {canEdit && activity && <ActivityEditor activity={activity} close={close} />}
         <section className="detail-section">
           <h3>Planification</h3>
           <dl>
@@ -536,6 +537,101 @@ function Detail({
         </section>
       </div>
     </aside>
+  );
+}
+
+function ActivityEditor({
+  activity,
+  close,
+}: {
+  activity: PlanwardDocument["activities"][string];
+  close: () => void;
+}) {
+  const router = useRouter();
+  const [error, setError] = useState("");
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const values = new FormData(event.currentTarget);
+    const response = await fetch("/api/project", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        kind: "activity",
+        id: activity.id,
+        patch: {
+          name: String(values.get("name")),
+          status: String(values.get("status")),
+          start: String(values.get("start")),
+          end: String(values.get("end")),
+          dur: Number(values.get("dur")),
+          estimate: Number(values.get("estimate")),
+          desc: String(values.get("desc")),
+        },
+      }),
+    });
+    if (!response.ok) {
+      const body = await response.json();
+      setError(body.error ?? "Modification impossible.");
+      return;
+    }
+    close();
+    router.refresh();
+  };
+  return (
+    <form className="editor detail-section" onSubmit={submit}>
+      <h3>Modifier l’activité</h3>
+      <label>
+        Nom
+        <input className="inp" name="name" defaultValue={activity.name} required />
+      </label>
+      <label>
+        Statut
+        <select className="inp" name="status" defaultValue={activity.status}>
+          {Object.entries(labels).map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
+        Début
+        <input className="inp" name="start" type="date" defaultValue={activity.start} required />
+      </label>
+      <label>
+        Fin
+        <input className="inp" name="end" type="date" defaultValue={activity.end} required />
+      </label>
+      <label>
+        Durée (jours ouvrés)
+        <input
+          className="inp"
+          name="dur"
+          type="number"
+          min="1"
+          defaultValue={activity.dur}
+          required
+        />
+      </label>
+      <label>
+        Charge estimée (h)
+        <input
+          className="inp"
+          name="estimate"
+          type="number"
+          min="0"
+          step="0.01"
+          defaultValue={activity.estimate}
+          required
+        />
+      </label>
+      <label className="full">
+        Description
+        <textarea className="inp" name="desc" defaultValue={activity.desc} rows={3} />
+      </label>
+      {error && <p className="error">{error}</p>}
+      <button className="btn primary">Enregistrer</button>
+    </form>
   );
 }
 function Timeline({
