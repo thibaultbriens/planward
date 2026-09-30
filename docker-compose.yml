@@ -1,0 +1,31 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://planward:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@db:5432/planward
+      ADMIN_PASSWORD_HASH: ${ADMIN_PASSWORD_HASH:?Set ADMIN_PASSWORD_HASH}
+      SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET}
+      PRIVATE: ${PRIVATE:-false}
+    ports:
+      - "3000:3000"
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: planward
+      POSTGRES_USER: planward
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U planward -d planward"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - planward-postgres:/var/lib/postgresql/data
+volumes:
+  planward-postgres:

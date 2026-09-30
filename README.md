@@ -9,10 +9,29 @@ Planward is being ported faithfully from the EchoGloves prototype. The legacy st
 application remains in [`legacy/pilotage.html`](legacy/pilotage.html) as the visual and
 behavioural reference during the port.
 
-## Status
+## Quick start
 
-The project foundation is under construction. The domain contract and user interface are
-introduced incrementally, with tests before implementation for scheduling rules.
+```sh
+pnpm install
+cp .env.example .env
+pnpm db:push
+pnpm db:seed
+pnpm dev
+```
+
+The planning is public by default. Enter the administrator password in the application to
+edit; set `PRIVATE=true` when read access should require the same session.
+
+## Deploy
+
+Use a managed PostgreSQL database on Vercel, or run the included Docker Compose stack on a
+small VPS. See [self-hosting](docs/self-hosting.md).
+
+## Non-goals
+
+Planward deliberately does not provide portfolio management, invoicing, ticket time
+tracking, configurable workflows, fine-grained permissions, or a marketplace of
+integrations.
 
 ## License
 
