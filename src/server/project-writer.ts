@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+import { randomUUID } from "node:crypto";
+import { eq } from "drizzle-orm";
+import type { PlanwardDocument } from "@/core/format";
+import { getDatabase } from "@/db/client";
+import { activities, assignments, auditLog, dependencies, holidays, milestones, projects, projectSettings, resourceCapacity, resources, sections } from "@/db/schema";
+import { getCurrentProject } from "./project-repository";
+
+export async function replaceCurrentProject(document: PlanwardDocument): Promise<void> {
+  const db = getDatabase();
+  const before = await getCurrentProject();
+  const existing = await db.select({ id: projects.id }).from(projects).limit(1);
+  const projectId = randomUUID();
+  const resourceIds = Object.fromEntries(Object.keys(document.resources).map((sourceId) => [sourceId, randomUUID()]));
+  const sectionIds = Object.fromEntries(Object.keys(document.sections).map((sourceId) => [sourceId, randomUUID()]));
+  const activityIds = Object.fromEntries(Object.keys(document.activities).map((sourceId) => [sourceId, randomUUID()]));
+  const milestoneIds = Object.fromEntries(Object.keys(document.milestones).map((sourceId) => [sourceId, randomUUID()]));
+  await db.transaction(async (tx) => {
+    if (existing[0]) await tx.delete(projects).where(eq(projects.id, existing[0].id));
+    await tx.insert(projects).values({ id: projectId, externalId: document.meta.project.id, name: document.meta.project.name });
+    await tx.insert(projectSettings).values({ projectId, hoursPerDay: String(document.meta.project.hoursPerDay), startDate: document.meta.project.startDate, weekDays: document.meta.project.weekDays, autoThreshold: String(document.meta.project.autoThreshold), country: document.meta.project.country ?? "FR" });
+    const resourceRows = Object.entries(document.resources).map(([sourceId, resource]) => ({ id: resourceIds[sourceId], externalId: sourceId, projectId, name: resource.name, team: resource.team, initials: resource.initials, color: resource.color, order: resource.order, defaultCap: String(resource.defaultCap) }));
+    if (resourceRows.length) await tx.insert(resources).values(resourceRows);
+    const capacityRows = Object.entries(document.resources).flatMap(([sourceId, resource]) => Object.entries(resource.cap).map(([monday, hours]) => ({ resourceId: resourceIds[sourceId], monday, hours: String(hours) })));
+    if (capacityRows.length) await tx.insert(resourceCapacity).values(capacityRows);
+    const sectionRows = Object.entries(document.sections).map(([sourceId, section]) => ({ id: sectionIds[sourceId], externalId: sourceId, projectId, name: section.name, code: section.code, ownerId: section.owner ? resourceIds[section.owner] : null, order: Math.round(section.order), priority: section.priority, kind: section.kind, ref: section.ref ?? null }));
+    if (sectionRows.length) await tx.insert(sections).values(sectionRows);
+    const activityRows = Object.entries(document.activities).map(([sourceId, activity]) => ({ id: activityIds[sourceId], externalId: sourceId, projectId, sectionId: sectionIds[activity.section], name: activity.name, code: activity.code, wbs: activity.wbs, status: activity.status, ownerId: resourceIds[activity.owner] ?? null, startDate: activity.start, endDate: activity.end, durationDays: activity.dur, estimateHours: String(activity.estimate), description: activity.desc, ref: activity.ref ?? null }));
+    if (activityRows.length) await tx.insert(activities).values(activityRows);
+    const assignmentRows = Object.entries(document.activities).flatMap(([sourceId, activity]) => Object.entries(activity.assign).map(([resourceId, assignment]) => ({ activityId: activityIds[sourceId], resourceId: resourceIds[resourceId], plannedHours: String(assignment.planned), actualHours: String(assignment.actual), remainingHours: String(assignment.remaining) })));
+    if (assignmentRows.length) await tx.insert(assignments).values(assignmentRows);
+    const milestoneRows = Object.entries(document.milestones).map(([sourceId, milestone]) => ({ id: milestoneIds[sourceId], externalId: sourceId, projectId, sectionId: sectionIds[milestone.section], name: milestone.name, date: milestone.date, ownerId: resourceIds[milestone.owner] ?? null, status: milestone.status, description: milestone.desc, ref: milestone.ref ?? null }));
+    if (milestoneRows.length) await tx.insert(milestones).values(milestoneRows);
+    const dependencyRows = Object.entries(document.deps).map(([sourceId, dependency]) => ({ id: randomUUID(), externalId: sourceId, projectId, fromId: activityIds[dependency.from] ?? milestoneIds[dependency.from], toId: activityIds[dependency.to] ?? milestoneIds[dependency.to], lagDays: dependency.lag }));
+    if (dependencyRows.length) await tx.insert(dependencies).values(dependencyRows);
+    const holidayRows = Object.entries(document.holidays).map(([sourceId, holiday]) => ({ id: randomUUID(), externalId: sourceId, projectId, name: holiday.name, startDate: holiday.start, endDate: holiday.end, resourceId: holiday.who ? resourceIds[holiday.who] : null }));
+    if (holidayRows.length) await tx.insert(holidays).values(holidayRows);
+    await tx.insert(auditLog).values({ projectId, action: "import", entityType: "project", before, after: document });
+  });
+}
