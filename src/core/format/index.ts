@@ -3,6 +3,9 @@ import { migrateEchoPmV1 } from "./legacy";
 import type { PlanwardDocument } from "./schema";
 import { validatePlanward } from "./validation";
 
+export { planwardSchema, type PlanwardDocument } from "./schema";
+export { ProjectFormatError, validatePlanward } from "./validation";
+
 export function importProjectDocument(input: unknown): PlanwardDocument {
   if (input !== null && typeof input === "object" && (input as { format?: unknown }).format === "echo-pm") {
     return migrateEchoPmV1(input);
