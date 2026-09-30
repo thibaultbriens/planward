@@ -253,9 +253,10 @@ export function PlanwardApp({ project, canEdit }: Props) {
                     <th>Fin</th>
                     <th>Durée</th>
                     <th>Estimé</th>
-                    <th>Réel</th>
-                    <th>Reste</th>
-                    <th>Avancement</th>
+                        <th>Réel</th>
+                        <th>Reste</th>
+                        <th>Écart</th>
+                        <th>Avancement</th>
                     <th>Dépend de</th>
                     <th>Statut</th>
                   </tr>
