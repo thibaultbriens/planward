@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.0",
-    "drizzle-orm": "^0.44.0",
+    "drizzle-orm": "^0.45.3",
     "jspdf": "^4.2.1",
     "next": "^16.0.0",
     "postgres": "^3.4.0",
