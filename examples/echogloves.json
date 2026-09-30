@@ -1,0 +1,2553 @@
+{
+ "format": "echo-pm",
+ "version": 1,
+ "exportedAt": "2026-09-24T20:54:53.576Z",
+ "meta": {
+  "project": {
+   "hoursPerDay": 8,
+   "id": "project",
+   "name": "EchoGloves — POC IoT de traduction de la LSF",
+   "source": "ProjeQtor export"
+  }
+ },
+ "sections": {
+  "119": {
+   "code": "SEC-HF",
+   "id": "119",
+   "name": "SEC-HF — Hardware & Firmware",
+   "order": 1,
+   "owner": "Lukas",
+   "priority": 2,
+   "ref": "ECHOGLOVES-POC-2026-PHA-1",
+   "status": "qualified",
+   "wbs": "1.1"
+  },
+  "120": {
+   "code": "SEC-ML",
+   "id": "120",
+   "name": "SEC-ML — Système IA de reconnaissance LSF",
+   "order": 2,
+   "owner": "Maxence",
+   "priority": 3,
+   "ref": "ECHOGLOVES-POC-2026-PHA-2",
+   "status": "recorded",
+   "wbs": "1.2"
+  },
+  "121": {
+   "code": "SEC-MOB",
+   "id": "121",
+   "name": "SEC-MOB — Application mobile",
+   "order": 3,
+   "owner": "Victor",
+   "priority": 4,
+   "ref": "ECHOGLOVES-POC-2026-PHA-3",
+   "status": "recorded",
+   "wbs": "1.3"
+  },
+  "122": {
+   "code": "SEC-CLOUD",
+   "id": "122",
+   "name": "SEC-CLOUD — Backend & Cloud",
+   "order": 4,
+   "owner": "Victor",
+   "priority": 6,
+   "ref": "ECHOGLOVES-POC-2026-PHA-4",
+   "status": "recorded",
+   "wbs": "1.4"
+  },
+  "123": {
+   "code": "SEC-WEB",
+   "id": "123",
+   "name": "SEC-WEB — Application web B2B",
+   "order": 5,
+   "owner": "Victor",
+   "priority": 5,
+   "ref": "ECHOGLOVES-POC-2026-PHA-5",
+   "status": "recorded",
+   "wbs": "1.5"
+  },
+  "124": {
+   "code": "SEC-VAL",
+   "id": "124",
+   "name": "SEC-VAL — Validation du POC",
+   "order": 6,
+   "owner": "Thibault",
+   "priority": 7,
+   "ref": "ECHOGLOVES-POC-2026-PHA-6",
+   "status": "recorded",
+   "wbs": "1.6"
+  },
+  "125": {
+   "code": "SEC-MKT",
+   "id": "125",
+   "name": "SEC-MKT — Marketing",
+   "order": 7,
+   "owner": "Thibault",
+   "priority": 1,
+   "ref": "ECHOGLOVES-POC-2026-PHA-7",
+   "status": "recorded",
+   "wbs": "1.7"
+  },
+  "126": {
+   "code": "SEC-PM",
+   "id": "126",
+   "name": "SEC-PM — Pilotage / AGL",
+   "order": 8,
+   "owner": "Thibault",
+   "priority": 8,
+   "ref": "ECHOGLOVES-POC-2026-PHA-8",
+   "status": "recorded",
+   "wbs": "1.8"
+  },
+  "127": {
+   "code": "SEC-POC",
+   "id": "127",
+   "name": "SEC-POC — Préparation soutenance POC",
+   "order": 9,
+   "owner": "Thibault",
+   "priority": 9,
+   "ref": "ECHOGLOVES-POC-2026-PHA-9",
+   "status": "recorded",
+   "wbs": "1.9"
+  },
+  "128": {
+   "code": "SEC-MO",
+   "id": "128",
+   "name": "SEC-MO — Making Of / AGL",
+   "order": 10,
+   "owner": "Thibault",
+   "priority": 10,
+   "ref": "ECHOGLOVES-POC-2026-PHA-10",
+   "status": "recorded",
+   "wbs": "1.10"
+  },
+  "129": {
+   "code": "SEC-JALONS",
+   "id": "129",
+   "name": "SEC-JALONS — Jalons",
+   "order": 11,
+   "owner": "Thibault",
+   "priority": 11,
+   "ref": "ECHOGLOVES-POC-2026-PHA-11",
+   "status": "recorded",
+   "wbs": "1.11"
+  }
+ },
+ "activities": {
+  "1": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 10,
+     "remaining": 10
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 10,
+     "remaining": 10
+    }
+   },
+   "code": "HF-PRE-ARCH",
+   "desc": "Code=HF-PRE-ARCH | Équipe=Hardware & Firmware (Team HF) | Charge=12 h",
+   "end": "2026-09-18",
+   "estimate": 20,
+   "id": "1",
+   "name": "Concevoir et valider l’architecture électronique du gant",
+   "owner": "Lukas",
+   "ref": "ECHOGLOVES-POC-2026-TAS-1",
+   "section": "119",
+   "start": "2026-09-10",
+   "status": "inprogress",
+   "wbs": "1.1.1"
+  },
+  "2": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    }
+   },
+   "code": "HF-PRE-DATA",
+   "desc": "Code=HF-PRE-DATA | Équipe=Hardware & Firmware (Team HF) | Charge=4 h",
+   "end": "2026-10-02",
+   "estimate": 4,
+   "id": "2",
+   "name": "Définir un draft du format de données des capteurs",
+   "owner": "Lukas",
+   "ref": "ECHOGLOVES-POC-2026-TAS-2",
+   "section": "119",
+   "start": "2026-09-24",
+   "status": "recorded",
+   "wbs": "1.1.4"
+  },
+  "3": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 1.5,
+     "remaining": 1.5
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 1.5,
+     "remaining": 1.5
+    }
+   },
+   "code": "HF-PRE-BLE",
+   "desc": "Code=HF-PRE-BLE | Équipe=Hardware & Firmware (Team HF) | Charge=6 h",
+   "end": "2026-10-12",
+   "estimate": 3,
+   "id": "3",
+   "name": "Rechercher et préparer le protocole Bluetooth avec l’application",
+   "owner": "Lukas",
+   "ref": "ECHOGLOVES-POC-2026-TAS-3",
+   "section": "119",
+   "start": "2026-10-05",
+   "status": "recorded",
+   "wbs": "1.1.5"
+  },
+  "4": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 2.5,
+     "remaining": 2.5
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 2.5,
+     "remaining": 2.5
+    }
+   },
+   "code": "HF-PRE-SENS",
+   "desc": "Code=HF-PRE-SENS | Équipe=Hardware & Firmware (Team HF) | Charge=5 h",
+   "end": "2026-10-12",
+   "estimate": 5,
+   "id": "4",
+   "name": "Développer les premiers drivers et prototypes d’acquisition des capteurs",
+   "owner": "Romane",
+   "ref": "ECHOGLOVES-POC-2026-TAS-4",
+   "section": "119",
+   "start": "2026-10-05",
+   "status": "recorded",
+   "wbs": "1.1.2"
+  },
+  "6": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    }
+   },
+   "code": "HF-PRE-CABL",
+   "desc": "Code=HF-PRE-CABL | Équipe=Hardware & Firmware (Team HF) | Charge=5 h",
+   "end": "2026-09-22",
+   "estimate": 6,
+   "id": "6",
+   "name": "Concevoir le schéma de câblage, le pin mapping et l’implantation",
+   "owner": "Romane",
+   "ref": "ECHOGLOVES-POC-2026-TAS-6",
+   "section": "119",
+   "start": "2026-09-21",
+   "status": "recorded",
+   "wbs": "1.1.3"
+  },
+  "9": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    },
+    "Thibault": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    }
+   },
+   "code": "HF-02",
+   "desc": "Code=HF-02 | Équipe=Hardware & Firmware (Team HF) | Charge=6 h",
+   "end": "2026-10-05",
+   "estimate": 12,
+   "id": "9",
+   "name": "Tester individuellement les capteurs et composants réels",
+   "owner": "Romane",
+   "ref": "ECHOGLOVES-POC-2026-TAS-9",
+   "section": "119",
+   "start": "2026-09-30",
+   "status": "recorded",
+   "wbs": "1.1.6",
+   "dur": 4
+  },
+  "10": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 5,
+     "remaining": 5
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 5,
+     "remaining": 5
+    },
+    "Thibault": {
+     "actual": 0,
+     "planned": 5,
+     "remaining": 5
+    }
+   },
+   "code": "HF-04",
+   "desc": "Code=HF-04 | Équipe=Hardware & Firmware (Team HF) | Charge=3 h",
+   "dur": 6,
+   "end": "2026-10-13",
+   "estimate": 15,
+   "id": "10",
+   "name": "Câbler les capteurs sur l’ESP32 selon le schéma préparé",
+   "owner": "Lukas",
+   "ref": "ECHOGLOVES-POC-2026-TAS-10",
+   "section": "119",
+   "start": "2026-10-06",
+   "status": "recorded",
+   "wbs": "1.1.7"
+  },
+  "11": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    }
+   },
+   "code": "HF-05",
+   "desc": "Code=HF-05 | Équipe=Hardware & Firmware (Team HF) | Charge=5 h",
+   "end": "2026-10-15",
+   "estimate": 5,
+   "id": "11",
+   "name": "Intégrer et valider l’acquisition sur les capteurs réels",
+   "owner": "Lukas",
+   "ref": "ECHOGLOVES-POC-2026-TAS-11",
+   "section": "119",
+   "start": "2026-10-14",
+   "status": "recorded",
+   "wbs": "1.1.8",
+   "dur": 2
+  },
+  "12": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    }
+   },
+   "code": "HF-06",
+   "desc": "Code=HF-06 | Équipe=Hardware & Firmware (Team HF) | Charge=8 h",
+   "end": "2026-10-20",
+   "estimate": 8,
+   "id": "12",
+   "name": "Calibrer les capteurs",
+   "owner": "Romane",
+   "ref": "ECHOGLOVES-POC-2026-TAS-12",
+   "section": "119",
+   "start": "2026-10-16",
+   "status": "recorded",
+   "wbs": "1.1.9",
+   "dur": 3
+  },
+  "13": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    }
+   },
+   "code": "HF-07",
+   "desc": "Code=HF-07 | Équipe=Hardware & Firmware (Team HF) | Charge=6 h",
+   "dur": 3,
+   "end": "2026-10-23",
+   "estimate": 6,
+   "id": "13",
+   "name": "Implémenter et ajuster le prétraitement firmware",
+   "owner": "Lukas",
+   "ref": "ECHOGLOVES-POC-2026-TAS-13",
+   "section": "119",
+   "start": "2026-10-21",
+   "status": "recorded",
+   "wbs": "1.1.10"
+  },
+  "14": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 1.33,
+     "remaining": 1.33
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 1.33,
+     "remaining": 1.33
+    },
+    "Thibault": {
+     "actual": 0,
+     "planned": 1.33,
+     "remaining": 1.33
+    }
+   },
+   "code": "HF-10",
+   "desc": "Code=HF-10 | Équipe=Hardware & Firmware (Team HF) | Charge=4 h",
+   "dur": 1,
+   "end": "2026-09-30",
+   "estimate": 4,
+   "id": "14",
+   "name": "Intégrer la batterie et l’alimentation",
+   "owner": "Romane",
+   "ref": "ECHOGLOVES-POC-2026-TAS-14",
+   "section": "119",
+   "start": "2026-09-30",
+   "status": "recorded",
+   "wbs": "1.1.11"
+  },
+  "15": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 1.33,
+     "remaining": 1.33
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 1.33,
+     "remaining": 1.33
+    },
+    "Thibault": {
+     "actual": 0,
+     "planned": 1.33,
+     "remaining": 1.33
+    }
+   },
+   "code": "HF-11",
+   "desc": "Code=HF-11 | Équipe=Hardware & Firmware (Team HF) | Charge=4 h",
+   "dur": 1,
+   "end": "2026-10-14",
+   "estimate": 4,
+   "id": "15",
+   "name": "Fixer les composants sur le gant selon le plan d’implantation",
+   "owner": "Romane",
+   "ref": "ECHOGLOVES-POC-2026-TAS-15",
+   "section": "119",
+   "start": "2026-10-14",
+   "status": "recorded",
+   "wbs": "1.1.12"
+  },
+  "16": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 1.5,
+     "remaining": 1.5
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 1.5,
+     "remaining": 1.5
+    }
+   },
+   "code": "HF-09",
+   "desc": "Code=HF-09 | Équipe=Hardware & Firmware (Team HF) | Charge=3 h",
+   "end": "2026-10-19",
+   "estimate": 3,
+   "id": "16",
+   "name": "Intégrer et valider l’émission Bluetooth sur le gant réel",
+   "owner": "Lukas",
+   "ref": "ECHOGLOVES-POC-2026-TAS-16",
+   "section": "119",
+   "start": "2026-10-16",
+   "status": "recorded",
+   "wbs": "1.1.13",
+   "dur": 2
+  },
+  "17": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 1,
+     "remaining": 1
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 1,
+     "remaining": 1
+    }
+   },
+   "code": "HF-12",
+   "desc": "Code=HF-12 | Équipe=Hardware & Firmware (Team HF) | Charge=2 h",
+   "dur": 2,
+   "end": "2026-10-27",
+   "estimate": 2,
+   "id": "17",
+   "name": "Exécuter les tests du gant en situation portée",
+   "owner": "Romane",
+   "ref": "ECHOGLOVES-POC-2026-TAS-17",
+   "section": "119",
+   "start": "2026-10-26",
+   "status": "recorded",
+   "wbs": "1.1.14"
+  },
+  "18": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    }
+   },
+   "code": "HF-13",
+   "desc": "Code=HF-13 | Équipe=Hardware & Firmware (Team HF) | Charge=8 h",
+   "dur": 4,
+   "end": "2026-11-02",
+   "estimate": 8,
+   "id": "18",
+   "name": "Corriger les défauts matériels et firmware",
+   "owner": "Lukas",
+   "ref": "ECHOGLOVES-POC-2026-TAS-18",
+   "section": "119",
+   "start": "2026-10-28",
+   "status": "recorded",
+   "wbs": "1.1.15"
+  },
+  "19": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 1.5,
+     "remaining": 1.5
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 1.5,
+     "remaining": 1.5
+    }
+   },
+   "code": "HF-14",
+   "desc": "Code=HF-14 | Équipe=Hardware & Firmware (Team HF) | Charge=3 h",
+   "dur": 2,
+   "end": "2026-11-04",
+   "estimate": 3,
+   "id": "19",
+   "name": "Stabiliser une version du gant utilisable pour le POC",
+   "owner": "Romane",
+   "ref": "ECHOGLOVES-POC-2026-TAS-19",
+   "section": "119",
+   "start": "2026-11-03",
+   "status": "recorded",
+   "wbs": "1.1.16"
+  },
+  "20": {
+   "assign": {
+    "Ziad": {
+     "actual": 0,
+     "planned": 0.5,
+     "remaining": 0.5
+    }
+   },
+   "code": "ML-01",
+   "desc": "Code=ML-01 | Équipe=Machine Learning (Team ML) | Charge=3 h",
+   "end": "2026-09-23",
+   "estimate": 0.5,
+   "id": "20",
+   "name": "Sélectionner les signes retenus pour le POC",
+   "owner": "Ziad",
+   "ref": "ECHOGLOVES-POC-2026-TAS-20",
+   "section": "120",
+   "start": "2026-09-22",
+   "status": "recorded",
+   "wbs": "1.2.1"
+  },
+  "22": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 5,
+     "remaining": 5
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 5,
+     "remaining": 5
+    }
+   },
+   "code": "ML-PRE-02",
+   "desc": "Code=ML-PRE-02 | Équipe=Machine Learning (Team ML) | Charge=4 h",
+   "end": "2026-09-15",
+   "estimate": 10,
+   "id": "22",
+   "name": "Benchmarker et sélectionner les approches candidates",
+   "owner": "Maxence",
+   "ref": "ECHOGLOVES-POC-2026-TAS-22",
+   "section": "120",
+   "start": "2026-09-08",
+   "status": "recorded",
+   "wbs": "1.2.3"
+  },
+  "23": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    }
+   },
+   "code": "ML-03",
+   "desc": "Code=ML-03 | Équipe=Machine Learning (Team ML) | Charge=4 h",
+   "end": "2026-10-02",
+   "estimate": 4,
+   "id": "23",
+   "name": "Définir le protocole de collecte des mouvements",
+   "owner": "Ziad",
+   "ref": "ECHOGLOVES-POC-2026-TAS-23",
+   "section": "120",
+   "start": "2026-10-01",
+   "status": "recorded",
+   "wbs": "1.2.4"
+  },
+  "24": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 12,
+     "remaining": 12
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 12,
+     "remaining": 12
+    }
+   },
+   "code": "ML-07",
+   "desc": "Code=ML-07 | Équipe=Machine Learning (Team ML) | Charge=8 h",
+   "end": "2026-09-28",
+   "estimate": 24,
+   "id": "24",
+   "name": "Construire le pipeline de préparation sur données simulées",
+   "owner": "Maxence",
+   "ref": "ECHOGLOVES-POC-2026-TAS-24",
+   "section": "120",
+   "start": "2026-09-16",
+   "status": "recorded",
+   "wbs": "1.2.5"
+  },
+  "25": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 7,
+     "remaining": 7
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 7,
+     "remaining": 7
+    }
+   },
+   "code": "ML-PRE-01",
+   "desc": "Code=ML-PRE-01 | Équipe=Machine Learning (Team ML) | Charge=4 h",
+   "end": "2026-10-09",
+   "estimate": 14,
+   "id": "25",
+   "name": "Préparer le squelette du modèle baseline",
+   "owner": "Maxence",
+   "ref": "ECHOGLOVES-POC-2026-TAS-25",
+   "section": "120",
+   "start": "2026-10-01",
+   "status": "recorded",
+   "wbs": "1.2.6"
+  },
+  "26": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 5,
+     "remaining": 5
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 5,
+     "remaining": 5
+    }
+   },
+   "code": "ML-PRE-03",
+   "desc": "Code=ML-PRE-03 | Équipe=Machine Learning (Team ML) | Charge=3 h",
+   "end": "2026-10-20",
+   "estimate": 10,
+   "id": "26",
+   "name": "Préparer un service de reconnaissance avec modèle factice",
+   "owner": "Maxence",
+   "ref": "ECHOGLOVES-POC-2026-TAS-26",
+   "section": "120",
+   "start": "2026-10-12",
+   "status": "recorded",
+   "wbs": "1.2.7"
+  },
+  "27": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 7,
+     "remaining": 7
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 7,
+     "remaining": 7
+    }
+   },
+   "code": "ML-04",
+   "desc": "Code=ML-04 | Équipe=Machine Learning (Team ML) | Charge=30 h",
+   "dur": 4,
+   "end": "2026-10-29",
+   "estimate": 14,
+   "id": "27",
+   "name": "Réaliser les sessions de collecte avec le gant + labélisation",
+   "owner": "Ziad",
+   "ref": "ECHOGLOVES-POC-2026-TAS-27",
+   "section": "120",
+   "start": "2026-10-26",
+   "status": "recorded",
+   "wbs": "1.2.8"
+  },
+  "29": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    }
+   },
+   "code": "ML-06",
+   "desc": "Code=ML-06 | Équipe=Machine Learning (Team ML) | Charge=6 h",
+   "dur": 3,
+   "end": "2026-11-03",
+   "estimate": 6,
+   "id": "29",
+   "name": "Contrôler et nettoyer le dataset",
+   "owner": "Ziad",
+   "ref": "ECHOGLOVES-POC-2026-TAS-29",
+   "section": "120",
+   "start": "2026-10-30",
+   "status": "recorded",
+   "wbs": "1.2.9"
+  },
+  "31": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    }
+   },
+   "code": "ML-09",
+   "desc": "Code=ML-09 | Équipe=Machine Learning (Team ML) | Charge=8 h",
+   "dur": 4,
+   "end": "2026-11-09",
+   "estimate": 8,
+   "id": "31",
+   "name": "Entraîner et comparer les modèles sur le dataset réel",
+   "owner": "Maxence",
+   "ref": "ECHOGLOVES-POC-2026-TAS-31",
+   "section": "120",
+   "start": "2026-11-04",
+   "status": "recorded",
+   "wbs": "1.2.10"
+  },
+  "32": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 5,
+     "remaining": 5
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 5,
+     "remaining": 5
+    }
+   },
+   "code": "ML-10",
+   "desc": "Code=ML-10 | Équipe=Machine Learning (Team ML) | Charge=10 h",
+   "dur": 4,
+   "end": "2026-11-13",
+   "estimate": 10,
+   "id": "32",
+   "name": "Ajuster le modèle et/ou les données",
+   "owner": "Maxence",
+   "ref": "ECHOGLOVES-POC-2026-TAS-32",
+   "section": "120",
+   "start": "2026-11-10",
+   "status": "recorded",
+   "wbs": "1.2.11"
+  },
+  "33": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    }
+   },
+   "code": "ML-11",
+   "desc": "Code=ML-11 | Équipe=Machine Learning (Team ML) | Charge=6 h",
+   "dur": 3,
+   "end": "2026-11-18",
+   "estimate": 6,
+   "id": "33",
+   "name": "Évaluer le modèle final",
+   "owner": "Ziad",
+   "ref": "ECHOGLOVES-POC-2026-TAS-33",
+   "section": "120",
+   "start": "2026-11-16",
+   "status": "recorded",
+   "wbs": "1.2.12"
+  },
+  "34": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 1,
+     "remaining": 1
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 1,
+     "remaining": 1
+    }
+   },
+   "code": "ML-12",
+   "desc": "Code=ML-12 | Équipe=Machine Learning (Team ML) | Charge=2 h",
+   "dur": 1,
+   "end": "2026-11-19",
+   "estimate": 2,
+   "id": "34",
+   "name": "Documenter les performances obtenues",
+   "owner": "Ziad",
+   "ref": "ECHOGLOVES-POC-2026-TAS-34",
+   "section": "120",
+   "start": "2026-11-19",
+   "status": "recorded",
+   "wbs": "1.2.13"
+  },
+  "35": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 1,
+     "remaining": 1
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 1,
+     "remaining": 1
+    }
+   },
+   "code": "ML-13",
+   "desc": "Code=ML-13 | Équipe=Machine Learning (Team ML) | Charge=2 h",
+   "dur": 1,
+   "end": "2026-11-19",
+   "estimate": 2,
+   "id": "35",
+   "name": "Sélectionner et versionner le modèle retenu",
+   "owner": "Maxence",
+   "ref": "ECHOGLOVES-POC-2026-TAS-35",
+   "section": "120",
+   "start": "2026-11-19",
+   "status": "recorded",
+   "wbs": "1.2.14"
+  },
+  "36": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 1.5,
+     "remaining": 1.5
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 1.5,
+     "remaining": 1.5
+    }
+   },
+   "code": "ML-14",
+   "desc": "Code=ML-14 | Équipe=Machine Learning (Team ML) | Charge=3 h",
+   "dur": 2,
+   "end": "2026-11-23",
+   "estimate": 3,
+   "id": "36",
+   "name": "Brancher le vrai modèle dans le service de reconnaissance",
+   "owner": "Maxence",
+   "ref": "ECHOGLOVES-POC-2026-TAS-36",
+   "section": "120",
+   "start": "2026-11-20",
+   "status": "recorded",
+   "wbs": "1.2.15"
+  },
+  "37": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 1.5,
+     "remaining": 1.5
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 1.5,
+     "remaining": 1.5
+    }
+   },
+   "code": "ML-15",
+   "desc": "Code=ML-15 | Équipe=Machine Learning (Team ML) | Charge=3 h",
+   "dur": 2,
+   "end": "2026-12-01",
+   "estimate": 3,
+   "id": "37",
+   "name": "Tester la reconnaissance via l’API",
+   "owner": "Ziad",
+   "ref": "ECHOGLOVES-POC-2026-TAS-37",
+   "section": "120",
+   "start": "2026-11-30",
+   "status": "recorded",
+   "wbs": "1.2.16"
+  },
+  "38": {
+   "assign": {
+    "Victor": {
+     "actual": 0,
+     "planned": 10,
+     "remaining": 10
+    }
+   },
+   "code": "",
+   "desc": "Activité consolidée pour un développement assisté par IA | Charge=4 h",
+   "end": "2026-09-23",
+   "estimate": 10,
+   "id": "38",
+   "name": "Mock des parcours et de l’interface mobile",
+   "owner": "Victor",
+   "ref": "ECHOGLOVES-POC-2026-TAS-38",
+   "section": "121",
+   "start": "2026-09-10",
+   "status": "recorded",
+   "wbs": "1.3.1"
+  },
+  "39": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    }
+   },
+   "code": "",
+   "desc": "Activité consolidée pour un développement assisté par IA | Charge=8 h",
+   "end": "2026-10-27",
+   "estimate": 4,
+   "id": "39",
+   "name": "Implémenter la communication BLE et l’appairage",
+   "owner": "Victor",
+   "ref": "ECHOGLOVES-POC-2026-TAS-39",
+   "section": "121",
+   "start": "2026-10-20",
+   "status": "recorded",
+   "wbs": "1.3.2",
+   "dur": 6
+  },
+  "47": {
+   "assign": {
+    "Victor": {
+     "actual": 0,
+     "planned": 14,
+     "remaining": 14
+    }
+   },
+   "code": "",
+   "desc": "Activité consolidée pour un développement assisté par IA | Charge=8 h",
+   "end": "2026-10-09",
+   "estimate": 14,
+   "id": "47",
+   "name": "Intégrer la reconnaissance, la phrase, la voix et les états applicatifs",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-47",
+   "section": "121",
+   "start": "2026-09-25",
+   "status": "recorded",
+   "wbs": "1.3.3"
+  },
+  "50": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 10,
+     "remaining": 10
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 10,
+     "remaining": 10
+    }
+   },
+   "code": "",
+   "desc": "Activité consolidée pour un développement assisté par IA | Charge=6 h",
+   "dur": 9,
+   "end": "2026-12-14",
+   "estimate": 20,
+   "id": "50",
+   "name": "Tester et stabiliser l’application mobile avec le gant réel",
+   "owner": "Victor",
+   "ref": "ECHOGLOVES-POC-2026-TAS-50",
+   "section": "121",
+   "start": "2026-12-02",
+   "status": "recorded",
+   "wbs": "1.3.4"
+  },
+  "52": {
+   "assign": {
+    "Victor": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    }
+   },
+   "code": "",
+   "desc": "Activité consolidée pour un développement assisté par IA | Charge=5 h",
+   "end": "2026-10-14",
+   "estimate": 3,
+   "id": "52",
+   "name": "Définir l’architecture cloud et les contrats d’API",
+   "owner": "Victor",
+   "ref": "ECHOGLOVES-POC-2026-TAS-52",
+   "section": "122",
+   "start": "2026-10-12",
+   "status": "recorded",
+   "wbs": "1.4.1"
+  },
+  "54": {
+   "assign": {
+    "Victor": {
+     "actual": 0,
+     "planned": 8,
+     "remaining": 8
+    }
+   },
+   "code": "",
+   "desc": "Activité consolidée pour un développement assisté par IA | Charge=8 h",
+   "end": "2026-10-20",
+   "estimate": 8,
+   "id": "54",
+   "name": "Construire le backend, l’API mockée et l’infrastructure automatisée",
+   "owner": "Victor",
+   "ref": "ECHOGLOVES-POC-2026-TAS-54",
+   "section": "122",
+   "start": "2026-10-15",
+   "status": "recorded",
+   "wbs": "1.4.2"
+  },
+  "60": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    }
+   },
+   "code": "",
+   "desc": "Activité consolidée pour un développement assisté par IA | Charge=5 h",
+   "dur": 4,
+   "end": "2026-11-27",
+   "estimate": 6,
+   "id": "60",
+   "name": "Intégrer et déployer le service ML réel",
+   "owner": "Victor",
+   "ref": "ECHOGLOVES-POC-2026-TAS-60",
+   "section": "122",
+   "start": "2026-11-24",
+   "status": "recorded",
+   "wbs": "1.4.3"
+  },
+  "62": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    }
+   },
+   "code": "",
+   "desc": "Activité consolidée pour un développement assisté par IA | Charge=4 h",
+   "dur": 2,
+   "end": "2026-12-01",
+   "estimate": 4,
+   "id": "62",
+   "name": "Tester et stabiliser les services cloud du POC",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-62",
+   "section": "122",
+   "start": "2026-11-30",
+   "status": "recorded",
+   "wbs": "1.4.4"
+  },
+  "64": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 6,
+     "remaining": 6
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    }
+   },
+   "code": "",
+   "desc": "Activité consolidée pour un développement assisté par IA | Charge=3 h",
+   "end": "2026-10-26",
+   "estimate": 8,
+   "id": "64",
+   "name": "Cadrer les parcours, les maquettes et la structure web B2B",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-64",
+   "section": "123",
+   "start": "2026-10-15",
+   "status": "recorded",
+   "wbs": "1.5.1"
+  },
+  "67": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 6,
+     "remaining": 6
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 10,
+     "remaining": 10
+    }
+   },
+   "code": "",
+   "desc": "Activité consolidée pour un développement assisté par IA | Charge=7 h",
+   "end": "2026-11-12",
+   "estimate": 16,
+   "id": "67",
+   "name": "Développer l’application web B2B et son intégration aux API",
+   "owner": "Victor",
+   "ref": "ECHOGLOVES-POC-2026-TAS-67",
+   "section": "123",
+   "start": "2026-10-28",
+   "status": "recorded",
+   "wbs": "1.5.2"
+  },
+  "69": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    }
+   },
+   "code": "",
+   "desc": "Activité consolidée pour un développement assisté par IA | Charge=4 h",
+   "dur": 3,
+   "end": "2026-12-04",
+   "estimate": 4,
+   "id": "69",
+   "name": "Gérer les erreurs, tester et stabiliser l’application web B2B",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-69",
+   "section": "123",
+   "start": "2026-12-02",
+   "status": "recorded",
+   "wbs": "1.5.3"
+  },
+  "72": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 3.33,
+     "remaining": 3.33
+    },
+    "Maxence": {
+     "actual": 0,
+     "planned": 3.33,
+     "remaining": 3.33
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 3.33,
+     "remaining": 3.33
+    },
+    "Thibault": {
+     "actual": 0,
+     "planned": 3.33,
+     "remaining": 3.33
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 3.33,
+     "remaining": 3.33
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 3.33,
+     "remaining": 3.33
+    }
+   },
+   "code": "",
+   "desc": "Validation globale et corrections mineures du POC | Charge totale=20 h | Répartition égale entre les six ressources",
+   "dur": 4,
+   "end": "2026-12-18",
+   "estimate": 20,
+   "id": "72",
+   "name": "Validation et corrections finales du POC",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-72",
+   "section": "124",
+   "start": "2026-12-15",
+   "status": "recorded",
+   "wbs": "1.6.1"
+  },
+  "88": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    }
+   },
+   "code": "",
+   "desc": "Charge exprimée en heures selon les affectations nominatives",
+   "end": "2026-09-10",
+   "estimate": 3,
+   "id": "88",
+   "name": "Définir la cible, le message et l’angle marketing",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-88",
+   "section": "125",
+   "start": "2026-09-10",
+   "status": "recorded",
+   "wbs": "1.7.1"
+  },
+  "89": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 1.5,
+     "remaining": 1.5
+    }
+   },
+   "code": "",
+   "desc": "Charge exprimée en heures selon les affectations nominatives",
+   "end": "2026-09-14",
+   "estimate": 1.5,
+   "id": "89",
+   "name": "Écrire le scénario de la vidéo",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-89",
+   "section": "125",
+   "start": "2026-09-11",
+   "status": "recorded",
+   "wbs": "1.7.2"
+  },
+  "91": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    }
+   },
+   "code": "",
+   "desc": "Charge exprimée en heures selon les affectations nominatives",
+   "end": "2026-09-21",
+   "estimate": 4,
+   "id": "91",
+   "name": "Préparer les visuels",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-91",
+   "section": "125",
+   "start": "2026-09-15",
+   "status": "recorded",
+   "wbs": "1.7.3"
+  },
+  "93": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 10,
+     "remaining": 10
+    }
+   },
+   "code": "",
+   "desc": "Charge exprimée en heures selon les affectations nominatives",
+   "end": "2026-09-24",
+   "estimate": 10,
+   "id": "93",
+   "name": "Monter la vidéo",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-93",
+   "section": "125",
+   "start": "2026-09-15",
+   "status": "recorded",
+   "wbs": "1.7.5"
+  },
+  "94": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    }
+   },
+   "code": "",
+   "desc": "Charge exprimée en heures selon les affectations nominatives",
+   "end": "2026-09-28",
+   "estimate": 3,
+   "id": "94",
+   "name": "Apporter les corrections après la revue interne",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-94",
+   "section": "125",
+   "start": "2026-09-28",
+   "status": "recorded",
+   "wbs": "1.7.6"
+  },
+  "97": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 8,
+     "remaining": 8
+    }
+   },
+   "code": "",
+   "desc": "Pilotage récurrent : 30 minutes chaque lundi pendant toute la durée du projet",
+   "dur": 74,
+   "end": "2027-01-07",
+   "estimate": 10.5,
+   "id": "97",
+   "name": "Piloter le projet",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-97",
+   "section": "126",
+   "start": "2026-09-14",
+   "status": "recorded",
+   "wbs": "1.8.1"
+  },
+  "102": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 1,
+     "remaining": 1
+    }
+   },
+   "code": "",
+   "desc": "Charge exprimée en heures selon les affectations nominatives",
+   "dur": 1,
+   "end": "2027-01-04",
+   "estimate": 1,
+   "id": "102",
+   "name": "Définir le scénario de démonstration et le storytelling",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-102",
+   "section": "127",
+   "start": "2027-01-04",
+   "status": "recorded",
+   "wbs": "1.9.1"
+  },
+  "103": {
+   "assign": {
+    "Romane": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    },
+    "Thibault": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    }
+   },
+   "code": "",
+   "desc": "Charge exprimée en heures selon les affectations nominatives",
+   "dur": 6,
+   "end": "2027-01-12",
+   "estimate": 12,
+   "id": "103",
+   "name": "Produire les supports",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-103",
+   "section": "127",
+   "start": "2027-01-05",
+   "status": "recorded",
+   "wbs": "1.9.2"
+  },
+  "104": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 3,
+     "remaining": 3
+    }
+   },
+   "code": "",
+   "desc": "Charge exprimée en heures selon les affectations nominatives",
+   "dur": 6,
+   "end": "2027-01-12",
+   "estimate": 6,
+   "id": "104",
+   "name": "Préparer les équipements et les données de démonstration",
+   "owner": "Lukas",
+   "ref": "ECHOGLOVES-POC-2026-TAS-104",
+   "section": "127",
+   "start": "2027-01-05",
+   "status": "recorded",
+   "wbs": "1.9.3"
+  },
+  "105": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Maxence": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Thibault": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    }
+   },
+   "code": "",
+   "desc": "Charge exprimée en heures selon les affectations nominatives",
+   "dur": 2,
+   "end": "2027-01-14",
+   "estimate": 12,
+   "id": "105",
+   "name": "Répéter la soutenance complète",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-105",
+   "section": "127",
+   "start": "2027-01-13",
+   "status": "recorded",
+   "wbs": "1.9.4"
+  },
+  "110": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    }
+   },
+   "code": "MO-01",
+   "desc": "Code=MO-01 | Équipe=Backend, Mobile, Cloud (Team BMC) | Charge=4 h",
+   "dur": 2,
+   "end": "2026-10-12",
+   "estimate": 4,
+   "id": "110",
+   "name": "Consolider les données de pilotage",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-110",
+   "section": "128",
+   "start": "2026-10-09",
+   "status": "recorded",
+   "wbs": "1.10.1"
+  },
+  "111": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    }
+   },
+   "code": "MO-02",
+   "desc": "Code=MO-02 | Équipe=Hardware & Firmware (Team HF) | Charge=4 h",
+   "dur": 2,
+   "end": "2027-01-18",
+   "estimate": 4,
+   "id": "111",
+   "name": "Reconstituer événements et décisions",
+   "owner": "Romane",
+   "ref": "ECHOGLOVES-POC-2026-TAS-111",
+   "section": "128",
+   "start": "2027-01-15",
+   "status": "recorded",
+   "wbs": "1.10.2"
+  },
+  "112": {
+   "assign": {
+    "Maxence": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Ziad": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    }
+   },
+   "code": "MO-03",
+   "desc": "Code=MO-03 | Équipe=Machine Learning (Team ML) | Charge=4 h",
+   "dur": 2,
+   "end": "2027-01-18",
+   "estimate": 4,
+   "id": "112",
+   "name": "Analyser prévisionnel / réalisé",
+   "owner": "Maxence",
+   "ref": "ECHOGLOVES-POC-2026-TAS-112",
+   "section": "128",
+   "start": "2027-01-15",
+   "status": "recorded",
+   "wbs": "1.10.3"
+  },
+  "113": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    }
+   },
+   "code": "MO-04",
+   "desc": "Code=MO-04 | Équipe=Backend, Mobile, Cloud (Team BMC) | Charge=4 h",
+   "dur": 2,
+   "end": "2027-01-18",
+   "estimate": 4,
+   "id": "113",
+   "name": "Analyser difficultés et actions correctives",
+   "owner": "Victor",
+   "ref": "ECHOGLOVES-POC-2026-TAS-113",
+   "section": "128",
+   "start": "2027-01-15",
+   "status": "recorded",
+   "wbs": "1.10.4"
+  },
+  "114": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 2,
+     "remaining": 2
+    }
+   },
+   "code": "MO-05",
+   "desc": "Code=MO-05 | Équipe=Backend, Mobile, Cloud (Team BMC) | Charge=4 h",
+   "dur": 2,
+   "end": "2027-01-20",
+   "estimate": 4,
+   "id": "114",
+   "name": "Formaliser les enseignements",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-114",
+   "section": "128",
+   "start": "2027-01-19",
+   "status": "recorded",
+   "wbs": "1.10.5"
+  },
+  "115": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 4,
+     "remaining": 4
+    }
+   },
+   "code": "MO-06",
+   "desc": "Code=MO-06 | Équipe=Backend, Mobile, Cloud (Team BMC) | Charge=8 h",
+   "dur": 3,
+   "end": "2027-01-25",
+   "estimate": 8,
+   "id": "115",
+   "name": "Construire le support",
+   "owner": "Victor",
+   "ref": "ECHOGLOVES-POC-2026-TAS-115",
+   "section": "128",
+   "start": "2027-01-21",
+   "status": "recorded",
+   "wbs": "1.10.6"
+  },
+  "116": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 1,
+     "remaining": 1
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 1,
+     "remaining": 1
+    }
+   },
+   "code": "MO-07",
+   "desc": "Code=MO-07 | Équipe=Backend, Mobile, Cloud (Team BMC) | Charge=2 h",
+   "dur": 1,
+   "end": "2027-01-26",
+   "estimate": 2,
+   "id": "116",
+   "name": "Répartir les prises de parole",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-TAS-116",
+   "section": "128",
+   "start": "2027-01-26",
+   "status": "recorded",
+   "wbs": "1.10.7"
+  },
+  "117": {
+   "assign": {
+    "Lukas": {
+     "actual": 0,
+     "planned": 2.5,
+     "remaining": 2.5
+    },
+    "Romane": {
+     "actual": 0,
+     "planned": 2.5,
+     "remaining": 2.5
+    }
+   },
+   "code": "MO-08",
+   "desc": "Code=MO-08 | Équipe=Hardware & Firmware (Team HF) | Charge=5 h",
+   "dur": 1,
+   "end": "2027-01-27",
+   "estimate": 5,
+   "id": "117",
+   "name": "Répéter la soutenance",
+   "owner": "Romane",
+   "ref": "ECHOGLOVES-POC-2026-TAS-117",
+   "section": "128",
+   "start": "2027-01-27",
+   "status": "recorded",
+   "wbs": "1.10.8"
+  },
+  "118": {
+   "assign": {
+    "Thibault": {
+     "actual": 0,
+     "planned": 1.5,
+     "remaining": 1.5
+    },
+    "Victor": {
+     "actual": 0,
+     "planned": 1.5,
+     "remaining": 1.5
+    }
+   },
+   "code": "MO-09",
+   "desc": "Code=MO-09 | Équipe=Backend, Mobile, Cloud (Team BMC) | Charge=3 h",
+   "dur": 1,
+   "end": "2027-01-28",
+   "estimate": 3,
+   "id": "118",
+   "name": "Finaliser les supports",
+   "owner": "Victor",
+   "ref": "ECHOGLOVES-POC-2026-TAS-118",
+   "section": "128",
+   "start": "2027-01-28",
+   "status": "recorded",
+   "wbs": "1.10.9"
+  }
+ },
+ "milestones": {
+  "M1": {
+   "date": "2026-09-30",
+   "desc": "Code=J-COMP | Équipe=Hardware & Firmware (Team HF) | Date fixe=2026-09-23 09:00",
+   "id": "M1",
+   "name": "J-COMP — Jalon externe — Composants disponibles",
+   "owner": "Lukas",
+   "ref": "ECHOGLOVES-POC-2026-KEY-1",
+   "section": "129",
+   "status": "recorded"
+  },
+  "M2": {
+   "date": "2026-09-30",
+   "desc": "Code=J-MKT | Équipe=Backend, Mobile, Cloud (Team BMC) | Date fixe=2026-09-15T17:00:00",
+   "id": "M2",
+   "name": "J-MKT — Jalon — Vidéo marketing remise",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-KEY-2",
+   "section": "129",
+   "status": "recorded"
+  },
+  "M3": {
+   "date": "2026-12-17",
+   "desc": "Code=J-POC | Équipe=Backend, Mobile, Cloud (Team BMC) | Date fixe=2026-11-12T09:00:00",
+   "id": "M3",
+   "name": "J-POC — Jalon — Soutenance POC",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-KEY-3",
+   "section": "129",
+   "status": "recorded"
+  },
+  "M4": {
+   "date": "2027-01-22",
+   "desc": "Code=J-MO | Équipe=Backend, Mobile, Cloud (Team BMC) | Date fixe=2026-11-26T09:00:00",
+   "id": "M4",
+   "name": "J-MO — Jalon — Soutenance Making Of / AGL",
+   "owner": "Thibault",
+   "ref": "ECHOGLOVES-POC-2026-KEY-4",
+   "section": "129",
+   "status": "recorded"
+  }
+ },
+ "deps": {
+  "1": {
+   "from": "1",
+   "id": "1",
+   "lag": 0,
+   "to": "2"
+  },
+  "2": {
+   "from": "20",
+   "id": "2",
+   "lag": 0,
+   "to": "2"
+  },
+  "3": {
+   "from": "2",
+   "id": "3",
+   "lag": 0,
+   "to": "3"
+  },
+  "4": {
+   "from": "1",
+   "id": "4",
+   "lag": 0,
+   "to": "4"
+  },
+  "5": {
+   "from": "2",
+   "id": "5",
+   "lag": 0,
+   "to": "4"
+  },
+  "11": {
+   "from": "M1",
+   "id": "11",
+   "lag": 0,
+   "to": "9"
+  },
+  "12": {
+   "from": "M1",
+   "id": "12",
+   "lag": 0,
+   "to": "10"
+  },
+  "13": {
+   "from": "1",
+   "id": "13",
+   "lag": 0,
+   "to": "10"
+  },
+  "14": {
+   "from": "9",
+   "id": "14",
+   "lag": 0,
+   "to": "10"
+  },
+  "15": {
+   "from": "6",
+   "id": "15",
+   "lag": 0,
+   "to": "10"
+  },
+  "16": {
+   "from": "2",
+   "id": "16",
+   "lag": 0,
+   "to": "11"
+  },
+  "17": {
+   "from": "10",
+   "id": "17",
+   "lag": 0,
+   "to": "11"
+  },
+  "18": {
+   "from": "4",
+   "id": "18",
+   "lag": 0,
+   "to": "11"
+  },
+  "19": {
+   "from": "11",
+   "id": "19",
+   "lag": 0,
+   "to": "12"
+  },
+  "20": {
+   "from": "12",
+   "id": "20",
+   "lag": 0,
+   "to": "13"
+  },
+  "21": {
+   "from": "M1",
+   "id": "21",
+   "lag": 0,
+   "to": "14"
+  },
+  "22": {
+   "from": "1",
+   "id": "22",
+   "lag": 0,
+   "to": "14"
+  },
+  "23": {
+   "from": "M1",
+   "id": "23",
+   "lag": 0,
+   "to": "15"
+  },
+  "24": {
+   "from": "10",
+   "id": "24",
+   "lag": 0,
+   "to": "15"
+  },
+  "25": {
+   "from": "14",
+   "id": "25",
+   "lag": 0,
+   "to": "15"
+  },
+  "27": {
+   "from": "M1",
+   "id": "27",
+   "lag": 0,
+   "to": "16"
+  },
+  "28": {
+   "from": "11",
+   "id": "28",
+   "lag": 0,
+   "to": "16"
+  },
+  "30": {
+   "from": "13",
+   "id": "30",
+   "lag": 0,
+   "to": "17"
+  },
+  "31": {
+   "from": "16",
+   "id": "31",
+   "lag": 0,
+   "to": "17"
+  },
+  "32": {
+   "from": "15",
+   "id": "32",
+   "lag": 0,
+   "to": "17"
+  },
+  "34": {
+   "from": "17",
+   "id": "34",
+   "lag": 0,
+   "to": "18"
+  },
+  "35": {
+   "from": "18",
+   "id": "35",
+   "lag": 0,
+   "to": "19"
+  },
+  "39": {
+   "from": "2",
+   "id": "39",
+   "lag": 0,
+   "to": "23"
+  },
+  "42": {
+   "from": "24",
+   "id": "42",
+   "lag": 0,
+   "to": "25"
+  },
+  "43": {
+   "from": "22",
+   "id": "43",
+   "lag": 0,
+   "to": "25"
+  },
+  "46": {
+   "from": "M1",
+   "id": "46",
+   "lag": 0,
+   "to": "27"
+  },
+  "47": {
+   "from": "23",
+   "id": "47",
+   "lag": 0,
+   "to": "27"
+  },
+  "48": {
+   "from": "12",
+   "id": "48",
+   "lag": 0,
+   "to": "27"
+  },
+  "49": {
+   "from": "13",
+   "id": "49",
+   "lag": 0,
+   "to": "27"
+  },
+  "50": {
+   "from": "15",
+   "id": "50",
+   "lag": 0,
+   "to": "27"
+  },
+  "52": {
+   "from": "27",
+   "id": "52",
+   "lag": 0,
+   "to": "29"
+  },
+  "58": {
+   "from": "22",
+   "id": "58",
+   "lag": 0,
+   "to": "31"
+  },
+  "59": {
+   "from": "31",
+   "id": "59",
+   "lag": 0,
+   "to": "32"
+  },
+  "60": {
+   "from": "32",
+   "id": "60",
+   "lag": 0,
+   "to": "33"
+  },
+  "61": {
+   "from": "33",
+   "id": "61",
+   "lag": 0,
+   "to": "34"
+  },
+  "62": {
+   "from": "33",
+   "id": "62",
+   "lag": 0,
+   "to": "35"
+  },
+  "63": {
+   "from": "35",
+   "id": "63",
+   "lag": 0,
+   "to": "36"
+  },
+  "64": {
+   "from": "26",
+   "id": "64",
+   "lag": 0,
+   "to": "36"
+  },
+  "66": {
+   "from": "36",
+   "id": "66",
+   "lag": 0,
+   "to": "37"
+  },
+  "194": {
+   "from": "110",
+   "id": "194",
+   "lag": 0,
+   "to": "111"
+  },
+  "196": {
+   "from": "110",
+   "id": "196",
+   "lag": 0,
+   "to": "112"
+  },
+  "198": {
+   "from": "110",
+   "id": "198",
+   "lag": 0,
+   "to": "113"
+  },
+  "200": {
+   "from": "111",
+   "id": "200",
+   "lag": 0,
+   "to": "114"
+  },
+  "201": {
+   "from": "112",
+   "id": "201",
+   "lag": 0,
+   "to": "114"
+  },
+  "202": {
+   "from": "113",
+   "id": "202",
+   "lag": 0,
+   "to": "114"
+  },
+  "203": {
+   "from": "114",
+   "id": "203",
+   "lag": 0,
+   "to": "115"
+  },
+  "204": {
+   "from": "115",
+   "id": "204",
+   "lag": 0,
+   "to": "116"
+  },
+  "205": {
+   "from": "116",
+   "id": "205",
+   "lag": 0,
+   "to": "117"
+  },
+  "206": {
+   "from": "117",
+   "id": "206",
+   "lag": 0,
+   "to": "118"
+  },
+  "209": {
+   "from": "118",
+   "id": "209",
+   "lag": 0,
+   "to": "M4"
+  },
+  "210": {
+   "from": "6",
+   "id": "210",
+   "lag": 0,
+   "to": "15"
+  },
+  "211": {
+   "from": "3",
+   "id": "211",
+   "lag": 0,
+   "to": "16"
+  },
+  "212": {
+   "from": "1",
+   "id": "212",
+   "lag": 0,
+   "to": "6"
+  },
+  "218": {
+   "from": "52",
+   "id": "218",
+   "lag": 0,
+   "to": "36"
+  },
+  "219": {
+   "from": "60",
+   "id": "219",
+   "lag": 0,
+   "to": "37"
+  },
+  "220": {
+   "from": "38",
+   "id": "220",
+   "lag": 0,
+   "to": "39"
+  },
+  "221": {
+   "from": "3",
+   "id": "221",
+   "lag": 0,
+   "to": "39"
+  },
+  "222": {
+   "from": "2",
+   "id": "222",
+   "lag": 0,
+   "to": "39"
+  },
+  "223": {
+   "from": "38",
+   "id": "223",
+   "lag": 0,
+   "to": "47"
+  },
+  "225": {
+   "from": "M1",
+   "id": "225",
+   "lag": 0,
+   "to": "39"
+  },
+  "226": {
+   "from": "16",
+   "id": "226",
+   "lag": 0,
+   "to": "39"
+  },
+  "229": {
+   "from": "47",
+   "id": "229",
+   "lag": 0,
+   "to": "50"
+  },
+  "230": {
+   "from": "19",
+   "id": "230",
+   "lag": 0,
+   "to": "50"
+  },
+  "231": {
+   "from": "62",
+   "id": "231",
+   "lag": 0,
+   "to": "50"
+  },
+  "232": {
+   "from": "37",
+   "id": "232",
+   "lag": 0,
+   "to": "50"
+  },
+  "233": {
+   "from": "38",
+   "id": "233",
+   "lag": 0,
+   "to": "52"
+  },
+  "235": {
+   "from": "52",
+   "id": "235",
+   "lag": 0,
+   "to": "54"
+  },
+  "236": {
+   "from": "54",
+   "id": "236",
+   "lag": 0,
+   "to": "60"
+  },
+  "237": {
+   "from": "36",
+   "id": "237",
+   "lag": 0,
+   "to": "60"
+  },
+  "238": {
+   "from": "60",
+   "id": "238",
+   "lag": 0,
+   "to": "62"
+  },
+  "239": {
+   "from": "54",
+   "id": "239",
+   "lag": 0,
+   "to": "62"
+  },
+  "240": {
+   "from": "52",
+   "id": "240",
+   "lag": 0,
+   "to": "64"
+  },
+  "241": {
+   "from": "64",
+   "id": "241",
+   "lag": 0,
+   "to": "67"
+  },
+  "242": {
+   "from": "52",
+   "id": "242",
+   "lag": 0,
+   "to": "67"
+  },
+  "243": {
+   "from": "54",
+   "id": "243",
+   "lag": 0,
+   "to": "67"
+  },
+  "244": {
+   "from": "67",
+   "id": "244",
+   "lag": 0,
+   "to": "69"
+  },
+  "245": {
+   "from": "62",
+   "id": "245",
+   "lag": 0,
+   "to": "69"
+  },
+  "255": {
+   "from": "88",
+   "id": "255",
+   "lag": 0,
+   "to": "89"
+  },
+  "261": {
+   "from": "93",
+   "id": "261",
+   "lag": 0,
+   "to": "94"
+  },
+  "262": {
+   "from": "94",
+   "id": "262",
+   "lag": 0,
+   "to": "M2"
+  },
+  "264": {
+   "from": "102",
+   "id": "264",
+   "lag": 0,
+   "to": "103"
+  },
+  "265": {
+   "from": "102",
+   "id": "265",
+   "lag": 0,
+   "to": "104"
+  },
+  "266": {
+   "from": "103",
+   "id": "266",
+   "lag": 0,
+   "to": "105"
+  },
+  "267": {
+   "from": "104",
+   "id": "267",
+   "lag": 0,
+   "to": "105"
+  },
+  "269": {
+   "from": "105",
+   "id": "269",
+   "lag": 0,
+   "to": "111"
+  },
+  "270": {
+   "from": "105",
+   "id": "270",
+   "lag": 0,
+   "to": "112"
+  },
+  "271": {
+   "from": "105",
+   "id": "271",
+   "lag": 0,
+   "to": "113"
+  },
+  "272": {
+   "from": "105",
+   "id": "272",
+   "lag": 0,
+   "to": "M3"
+  },
+  "275": {
+   "from": "89",
+   "id": "275",
+   "lag": 0,
+   "to": "91"
+  },
+  "276": {
+   "from": "1",
+   "id": "276",
+   "lag": 0,
+   "to": "72"
+  },
+  "278": {
+   "from": "19",
+   "id": "278",
+   "lag": 0,
+   "to": "72"
+  },
+  "279": {
+   "from": "37",
+   "id": "279",
+   "lag": 0,
+   "to": "72"
+  },
+  "280": {
+   "from": "38",
+   "id": "280",
+   "lag": 0,
+   "to": "72"
+  },
+  "281": {
+   "from": "52",
+   "id": "281",
+   "lag": 0,
+   "to": "72"
+  },
+  "282": {
+   "from": "64",
+   "id": "282",
+   "lag": 0,
+   "to": "72"
+  },
+  "283": {
+   "from": "50",
+   "id": "283",
+   "lag": 0,
+   "to": "72"
+  },
+  "284": {
+   "from": "62",
+   "id": "284",
+   "lag": 0,
+   "to": "72"
+  },
+  "285": {
+   "from": "69",
+   "id": "285",
+   "lag": 0,
+   "to": "72"
+  },
+  "286": {
+   "from": "72",
+   "id": "286",
+   "lag": 0,
+   "to": "102"
+  },
+  "287": {
+   "from": "72",
+   "id": "287",
+   "lag": 0,
+   "to": "105"
+  },
+  "288": {
+   "from": "91",
+   "id": "288",
+   "lag": 0,
+   "to": "20"
+  },
+  "289": {
+   "from": "29",
+   "id": "289",
+   "lag": 0,
+   "to": "31"
+  },
+  "dmu5mhvwmbsy": {
+   "from": "22",
+   "id": "dmu5mhvwmbsy",
+   "lag": 0,
+   "to": "24"
+  }
+ },
+ "resources": {
+  "Lukas": {
+   "cap": {},
+   "color": "#1C9E95",
+   "defaultCap": 8,
+   "id": "Lukas",
+   "initials": "LU",
+   "name": "Lukas",
+   "order": 0,
+   "team": "Hardware & Firmware (Team HF)"
+  },
+  "Maxence": {
+   "cap": {},
+   "color": "#7C6BD6",
+   "defaultCap": 8,
+   "id": "Maxence",
+   "initials": "MA",
+   "name": "Maxence",
+   "order": 2,
+   "team": "Machine Learning (Team ML)"
+  },
+  "Romane": {
+   "cap": {},
+   "color": "#3E93CF",
+   "defaultCap": 8,
+   "id": "Romane",
+   "initials": "RO",
+   "name": "Romane",
+   "order": 1,
+   "team": "Hardware & Firmware (Team HF)"
+  },
+  "Thibault": {
+   "cap": {},
+   "color": "#C75C98",
+   "defaultCap": 8,
+   "id": "Thibault",
+   "initials": "TH",
+   "name": "Thibault",
+   "order": 5,
+   "team": "Backend, Mobile, Cloud (Team BMC)"
+  },
+  "Victor": {
+   "cap": {},
+   "color": "#D19A2E",
+   "defaultCap": 8,
+   "id": "Victor",
+   "initials": "VI",
+   "name": "Victor",
+   "order": 4,
+   "team": "Backend, Mobile, Cloud (Team BMC)"
+  },
+  "Ziad": {
+   "cap": {},
+   "color": "#E0795B",
+   "defaultCap": 8,
+   "id": "Ziad",
+   "initials": "ZI",
+   "name": "Ziad",
+   "order": 3,
+   "team": "Machine Learning (Team ML)"
+  }
+ },
+ "holidays": {
+  "hmu5m2vn2q6m": {
+   "end": "2027-01-03",
+   "id": "hmu5m2vn2q6m",
+   "name": "Vacances de Noël",
+   "start": "2026-12-19",
+   "who": ""
+  }
+ }
+}
